@@ -45,40 +45,6 @@
     <string name="delete">delete</string>
     <string name="edit">edit</string>
 
-    <string name="your_mypos_card_already_been_activated">Your LeuPay card has already been activated.</string>
-    <string name="wrong_confirmation_code">Wrong confirmation code</string>
-    <string name="wrong_email_password">Wrong e-mail or password</string>
-    <string name="your_session_has_expired">Please login again</string>
-    <string name="connection_problem">Connection problem</string>
-    <string name="no_internet_connection">No internet connection. Please turn on Celluar date or use Wi-Fi to complete this action.</string>
-    <string name="service_temporarily_unavailable">Service Temporarily Unavailable, please try again later</string>
-    <string name="the_card_cannot_be_activated_from_your_account">The card cannot be activated from your account. For more information please contact us.</string>
-    <string name="invalid_card_pan">Invalid card PAN!</string>
-    <string name="you_have_reached_your_card_count_limit">Operation cannot be processed because you have reached the maximum number of LeuPay cards allowed.</string>
-    <string name="the_limit_for_amount_of_funding">The limit for amount of funding has been reached and the operation cannot be completed.For more information please contact our Customer Support for help.</string>
-    <string name="invalid_card_status">Operation cannot be processed with this card. Please, check the status of your card. If you need further assistance, contact our Customer Support</string>
-    <string name="operation_not_allowed">Operation not allowed. Please contact our customer Support Center.</string>
-    <string name="oper_decl_by_your_issuer">Operation is declined by your card Issuer. Please contact your card Issuer for more information.</string>
-    <string name="ins_funds">Insufficient funds</string>
-    <string name="ins_funds_with_fee">Insufficient funds. The fee for this operation is %1$s.</string>
-    <string name="the_limit_for_number_of_funding_has_been_reached">The limit for number of funding has been reached and the operation cannot be completed. For more information please contact our Customer Support for help.</string>
-    <string name="for_security_reasons_blocked_wallet">For security reasons your account is BLOCKED. Please, contact our Customer Support</string>
-    <string name="you_do_not_have_perm_to_make">You do not have permission to make this operation. Please contact the Business account owner.</string>
-    <string name="oper_cannot_be_proccessed_contact">Operation cannot be processed. Please contact our Customer Support.</string>
-    <string name="your_wallet_has_been_successfully_blocked">Your profile has been successfully blocked</string>
-    <string name="your_wallet_has_been_successfully_activated">Your profile has been successfully activated</string>
-    <string name="operation_is_declined_by_some_reason">Operation cannot be processed. Wrong CVC / operation declined by your card Issuer</string>
-    <string name="operation_failed_limits_reached">Operation failed. %1$s limits reached</string>
-    <string name="you_have_reached_your_card_count_limit_for_unverified_account">Operation cannot be processed because you have reached the maximum number of LeuPay cards allowed for not verified profile.</string>
-    <string name="operation_failed">Operation failed</string>
-    <string name="card_not_found">Card not found.</string>
-    <string name="operation_cannot_be_processed_because_your_card_is_pend_ver">Operation cannot be processed because your card is not pending verification.</string>
-    <string name="operation_cannot_be_prossed_receiver_not_active">Operation cannot be processed because the receiver is not active.</string>
-    <string name="activate_or_block_card_error_message">Operation not permitted. For more details please contact our customer support team</string>
-    <string name="oper_cannot_be_procc_bec_acc_blocked">Operation cannot be processed because your account is BLOCKED. Please activate your account or contact our Customer Support for help.</string>
-    <string name="operation_cannot_be_proccessed">Operation cannot be processed with this card. Please, contact our Customer Support for more information.</string>
-    <string name="receiver_blocked">Operation cannot be processed because the receiver’s account is BLOCKED</string>
-
     <!-- Contact information -->
     <string name="info_first_name">First name:</string>
     <string name="info_last_name">Last name:</string>
@@ -110,6 +76,13 @@
 
     <string name="permission_denied_phone_call">If you want to call, you have to grant the permission !</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <array name="contacts_colors">
+        <item>#e0e0e0</item>
+        <item>#3F51B5</item>
+        <item>#FF4081</item>
+        <item>#e5e500</item>
+        <item>#00e500</item>
+    </array>
+
 </resources>

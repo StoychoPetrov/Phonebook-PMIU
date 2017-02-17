@@ -2,6 +2,7 @@ package com.example.stoycho.phonebook.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,15 +22,15 @@ import java.util.List;
 
 public class ContactsGridAdapter extends BaseAdapter{
 
-    private Context         mContext;
     private List<UserModel> mContacts;
     private LayoutInflater  mLayoutInflater;
+    private String[] mColors;
 
     public ContactsGridAdapter(Context context, List<UserModel> contacts)
     {
-        mContext               = context;
         mContacts              = contacts;
-        mLayoutInflater        = ((Activity)mContext).getLayoutInflater();
+        mLayoutInflater        = ((Activity)context).getLayoutInflater();
+        mColors                = context.getResources().getStringArray(R.array.contacts_colors);
     }
 
     @Override
@@ -64,7 +65,7 @@ public class ContactsGridAdapter extends BaseAdapter{
         ViewHolder  holder   = (ViewHolder) view.getTag();
         UserModel   contact  = mContacts.get(position);
 
-        holder.mNamePrefixTxt.setText(contact.getFirstName().substring(0,1));
+        holder.mNamePrefixTxt.setText(contact.getFirstName().substring(0,1).toUpperCase());
         holder.mNameTxt.setText(contact.getFirstName());
 
         return view;
