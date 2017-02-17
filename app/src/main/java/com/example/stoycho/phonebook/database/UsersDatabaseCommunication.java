@@ -1,0 +1,91 @@
+package com.example.stoycho.phonebook.database;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+
+import com.example.stoycho.phonebook.models.UserModel;
+
+/**
+ * Created by stoycho.petrov on 07/12/2016.
+ */
+
+public class UsersDatabaseCommunication extends Database {
+
+    /********** Users table columns ************/
+    private final static String COLUMN_USER_ID          = "user_id";
+    private final static String COLUMN_FIRST_NAME       = "first_name";
+    private final static String COLUMN_LAST_NAME        = "last_name";
+    private final static String COLUMN_EMAIL            = "email";
+    private final static String COLUMN_PHONE_NUMBER     = "phone_number";
+    private final static String COLUMN_GENDER           = "gender";
+    private final static String COLUMN_IMAGE            = "image";
+    private final static String COLUMN_COUNTRY_ID_FK    = "coutry_id_fk";
+
+    private final static String USERS_TABLE_NAME        = "users";
+    private static UsersDatabaseCommunication instance  = null;
+
+    private UsersDatabaseCommunication(Context context) {
+        super(context);
+    }
+
+    public static UsersDatabaseCommunication getInstance(Context context)
+    {
+        if(instance == null)
+            instance = new UsersDatabaseCommunication(context);
+        return instance;
+    }
+
+    public long saveInDatabase(UserModel user) {
+        SQLiteDatabase db       = getWritableDatabase();
+        ContentValues values    = new ContentValues();
+        values.put(COLUMN_FIRST_NAME,       user.getFirstName());
+        values.put(COLUMN_LAST_NAME,        user.getLastName());
+        values.put(COLUMN_EMAIL,            user.getEmail());
+        values.put(COLUMN_PHONE_NUMBER,     user.getPhoneNumber());
+        values.put(COLUMN_GENDER,           user.getGender());
+        values.put(COLUMN_COUNTRY_ID_FK,    user.getCountry());
+        long id = db.insert(USERS_TABLE_NAME, null, values);
+        db.close();
+        user.setId((int) id);
+        return id;
+    }
+
+    public boolean updateUserInDatabase(UserModel user)
+    {
+        SQLiteDatabase database = getWritableDatabase();
+        ContentValues values    = new ContentValues();
+
+        values.put(COLUMN_FIRST_NAME,user.getFirstName());
+        values.put(COLUMN_LAST_NAME,user.getLastName());
+        values.put(COLUMN_EMAIL,user.getEmail());
+        values.put(COLUMN_PHONE_NUMBER,user.getPhoneNumber());
+        values.put(COLUMN_GENDER,user.getGender());
+        values.put(COLUMN_COUNTRY_ID_FK,user.getCountry());
+
+        int result = database.update(USERS_TABLE_NAME,values,COLUMN_USER_ID + "=?",new String[]{String.valueOf(user.getId())});
+        database.close();
+
+        return result > 0;
+    }
+
+    public boolean deleteUserFromDatabase(UserModel user)
+    {
+        SQLiteDatabase  database = getWritableDatabase();
+        boolean         result   = database.delete(USERS_TABLE_NAME,COLUMN_USER_ID + "=?",new String[]{String.valueOf(user.getId())}) > 0;
+
+        database.close();
+        return result;
+    }
+
+    public boolean updateImageInDatabase(int userId,String imagePath)
+    {
+        SQLiteDatabase database = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_IMAGE, imagePath);
+        int result = database.update(USERS_TABLE_NAME,values,COLUMN_USER_ID + "=?",new String[]{String.valueOf(userId)});
+        database.close();
+
+        return result > 0;
+    }
+}

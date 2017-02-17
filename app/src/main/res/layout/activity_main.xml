@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android           ="http://schemas.android.com/apk/res/android"
+    xmlns:tools             ="http://schemas.android.com/tools"
+    xmlns:app               ="http://schemas.android.com/apk/res-auto"
+    android:id              ="@+id/activity_main"
+    android:layout_width    ="match_parent"
+    android:layout_height   ="match_parent"
+    tools:context           ="com.example.stoycho.phonebook.activities.MainActivity">
+
+    <!-- App bar -->
+    <RelativeLayout
+        android:id              ="@+id/bar"
+        android:layout_width    ="match_parent"
+        android:layout_height   ="50dp"
+        android:background      ="@color/colorPrimary">
+
+        <TextView
+            android:id                      ="@+id/title"
+            android:layout_width            ="match_parent"
+            android:layout_height           ="wrap_content"
+            android:layout_centerVertical   ="true"
+            android:layout_toLeftOf         ="@+id/filter_button"
+            android:layout_toStartOf        ="@id/filter_button"
+            android:textSize                ="25sp"
+            android:textStyle               ="bold"
+            android:textColor               ="@android:color/white"
+            android:text                    ="@string/contacts"
+            android:paddingLeft             ="10dp"
+            android:paddingRight            ="10dp" />
+
+        <!-- EditText about filter by country name -->
+        <EditText
+            android:id                      ="@+id/search"
+            android:layout_width            ="match_parent"
+            android:layout_height           ="50dp"
+            android:layout_toLeftOf         ="@+id/filter_button"
+            android:paddingLeft             ="10dp"
+            android:paddingRight            ="10dp"
+            android:textColorHint           ="@android:color/darker_gray"
+            android:inputType               ="text"
+            android:hint                    ="@string/search"
+            android:visibility              ="invisible"/>
+
+        <ImageButton
+            android:id                      ="@+id/filter_button"
+            android:layout_width            ="wrap_content"
+            android:layout_height           ="match_parent"
+            android:layout_toLeftOf         ="@+id/search_button"
+            android:layout_centerVertical   ="true"
+            android:src                     ="@mipmap/filter"
+            android:background              ="@android:color/transparent"
+            android:paddingRight            ="10dp"
+            android:paddingLeft             ="10dp"
+            android:contentDescription      ="@null"/>
+
+
+        <ImageButton
+            android:id                          ="@+id/search_button"
+            android:layout_width                ="wrap_content"
+            android:layout_height               ="match_parent"
+            android:layout_alignParentRight     ="true"
+            android:layout_alignParentEnd       ="true"
+            android:layout_centerVertical       ="true"
+            android:src                         ="@android:drawable/ic_menu_search"
+            android:paddingRight                ="10dp"
+            android:paddingLeft                 ="10dp"
+            android:background                  ="@android:color/transparent"
+            android:contentDescription          ="@null"/>
+
+        <ImageButton
+            android:id                          ="@+id/close_button"
+            android:layout_width                ="wrap_content"
+            android:layout_height               ="match_parent"
+            android:layout_alignParentRight     ="true"
+            android:layout_alignParentEnd       ="true"
+            android:layout_centerVertical       ="true"
+            android:src                         ="@android:drawable/ic_menu_close_clear_cancel"
+            android:paddingRight                ="10dp"
+            android:paddingLeft                 ="10dp"
+            android:background                  ="@android:color/transparent"
+            android:contentDescription          ="@null"
+            android:visibility="invisible"/>
+
+
+    </RelativeLayout>
+
+
+    <android.support.design.widget.TabLayout
+        android:id                  ="@+id/tabs_layout"
+        android:layout_width        ="match_parent"
+        android:layout_height       ="wrap_content"
+        android:layout_below        ="@+id/bar"
+        android:background          ="@color/colorPrimary"
+        app:tabSelectedTextColor    ="@android:color/darker_gray"
+        app:tabTextColor            ="@android:color/white"
+        app:tabIndicatorColor       ="@android:color/white"
+        app:tabIndicatorHeight      ="3dp"/>
+
+    <android.support.v4.view.ViewPager
+        android:id              ="@+id/view_pager"
+        android:layout_width    ="match_parent"
+        android:layout_height   ="match_parent"
+        android:layout_below    ="@+id/tabs_layout"/>
+
+</RelativeLayout>

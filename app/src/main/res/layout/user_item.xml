@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android   ="http://schemas.android.com/apk/res/android"
+    android:id                  ="@+id/user_item"
+    android:layout_width        ="match_parent"
+    android:layout_height       ="wrap_content">
+
+    <View
+        android:id              ="@+id/top_line"
+        android:layout_width    ="match_parent"
+        android:layout_height   ="1dp"
+        android:background      ="@android:color/darker_gray"
+        android:visibility      ="gone"/>
+
+    <LinearLayout
+        android:id              ="@+id/user_info"
+        android:layout_width    ="match_parent"
+        android:layout_height   ="80dp"
+        android:layout_below    ="@+id/top_line"
+        android:orientation     ="horizontal"
+        android:paddingLeft     ="5dp"
+        android:paddingRight    ="5dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id                  ="@+id/user_image"
+            android:layout_width        ="0dp"
+            android:layout_height       ="match_parent"
+            android:layout_weight       ="0.5"
+            android:layout_gravity      ="center_vertical"
+            android:contentDescription  ="@null"
+            android:src                 ="@mipmap/ic_portrait_black_24dp" />
+
+        <TextView
+            android:id                  ="@+id/user_name"
+            android:layout_width        ="0dp"
+            android:layout_height       ="wrap_content"
+            android:layout_gravity      ="center_vertical"
+            android:layout_weight       ="2"
+            android:textColor           ="@android:color/black"
+            android:textSize            ="20sp"
+            android:gravity             ="start"
+            android:paddingLeft         ="10dp"
+            android:paddingRight        ="10dp" />
+
+        <ImageButton
+            android:id                  ="@+id/call_button"
+            android:layout_width        ="50dp"
+            android:layout_height       ="50dp"
+            android:layout_gravity      ="center_vertical"
+            android:src                 ="@android:drawable/ic_menu_call"
+            android:background          ="@android:color/transparent"
+            android:contentDescription  ="@null"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,115 @@
+<resources>
+    <string name="app_name">Phonebook</string>
+    <string name="new_contact">NEW CONTACT</string>
+
+    <!--  Tabs titles -->
+    <array name="tabs">
+        <item>Favourites</item>
+        <item>History</item>
+        <item>Contacts</item>
+    </array>
+
+    <!--Users strings -->
+    <string name="all">All</string>
+    <string name="contacts">Contacts</string>
+    <string name="registration">Registration</string>
+    <string name="countries">Countries</string>
+    <string name="editContact">Edit contact</string>
+    <string name="no_contacts">No contacts</string>
+    <string name="tel">tel:</string>
+    <string name="contact_information">Contact information</string>
+
+    <!-- Registration strings -->
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="country">Country</string>
+    <string name="email">E-mail</string>
+    <string name="phone_number">Phone</string>
+    <string name="gender">Gender</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="add">Confirm</string>
+    <string name="plus">+</string>
+    <string name="email_error">The email is wrong !</string>
+    <string name="phone_error">The phone is wrong</string>
+    <string name="message_for_dialog">Are you sure that you want to register ?</string>
+    <string name="message_for_register">You are registered successful !</string>
+    <string name="register_error">Your register occur error !</string>
+    <string name="updateInfo">Are you sure that you want to edit the contact ?</string>
+    <string name="sameNumber">There is contact with the same phone number !</string>
+    <string name="registrationError">You cannot save this contact !</string>
+    <string name="save">Save</string>
+    <string name="invalid_email">Invalid email !</string>
+    <string name="invalid_phone">Invalid phone number !</string>
+    <string name="empty_box">There is empty box !</string>
+    <string name="delete">delete</string>
+    <string name="edit">edit</string>
+
+    <string name="your_mypos_card_already_been_activated">Your LeuPay card has already been activated.</string>
+    <string name="wrong_confirmation_code">Wrong confirmation code</string>
+    <string name="wrong_email_password">Wrong e-mail or password</string>
+    <string name="your_session_has_expired">Please login again</string>
+    <string name="connection_problem">Connection problem</string>
+    <string name="no_internet_connection">No internet connection. Please turn on Celluar date or use Wi-Fi to complete this action.</string>
+    <string name="service_temporarily_unavailable">Service Temporarily Unavailable, please try again later</string>
+    <string name="the_card_cannot_be_activated_from_your_account">The card cannot be activated from your account. For more information please contact us.</string>
+    <string name="invalid_card_pan">Invalid card PAN!</string>
+    <string name="you_have_reached_your_card_count_limit">Operation cannot be processed because you have reached the maximum number of LeuPay cards allowed.</string>
+    <string name="the_limit_for_amount_of_funding">The limit for amount of funding has been reached and the operation cannot be completed.For more information please contact our Customer Support for help.</string>
+    <string name="invalid_card_status">Operation cannot be processed with this card. Please, check the status of your card. If you need further assistance, contact our Customer Support</string>
+    <string name="operation_not_allowed">Operation not allowed. Please contact our customer Support Center.</string>
+    <string name="oper_decl_by_your_issuer">Operation is declined by your card Issuer. Please contact your card Issuer for more information.</string>
+    <string name="ins_funds">Insufficient funds</string>
+    <string name="ins_funds_with_fee">Insufficient funds. The fee for this operation is %1$s.</string>
+    <string name="the_limit_for_number_of_funding_has_been_reached">The limit for number of funding has been reached and the operation cannot be completed. For more information please contact our Customer Support for help.</string>
+    <string name="for_security_reasons_blocked_wallet">For security reasons your account is BLOCKED. Please, contact our Customer Support</string>
+    <string name="you_do_not_have_perm_to_make">You do not have permission to make this operation. Please contact the Business account owner.</string>
+    <string name="oper_cannot_be_proccessed_contact">Operation cannot be processed. Please contact our Customer Support.</string>
+    <string name="your_wallet_has_been_successfully_blocked">Your profile has been successfully blocked</string>
+    <string name="your_wallet_has_been_successfully_activated">Your profile has been successfully activated</string>
+    <string name="operation_is_declined_by_some_reason">Operation cannot be processed. Wrong CVC / operation declined by your card Issuer</string>
+    <string name="operation_failed_limits_reached">Operation failed. %1$s limits reached</string>
+    <string name="you_have_reached_your_card_count_limit_for_unverified_account">Operation cannot be processed because you have reached the maximum number of LeuPay cards allowed for not verified profile.</string>
+    <string name="operation_failed">Operation failed</string>
+    <string name="card_not_found">Card not found.</string>
+    <string name="operation_cannot_be_processed_because_your_card_is_pend_ver">Operation cannot be processed because your card is not pending verification.</string>
+    <string name="operation_cannot_be_prossed_receiver_not_active">Operation cannot be processed because the receiver is not active.</string>
+    <string name="activate_or_block_card_error_message">Operation not permitted. For more details please contact our customer support team</string>
+    <string name="oper_cannot_be_procc_bec_acc_blocked">Operation cannot be processed because your account is BLOCKED. Please activate your account or contact our Customer Support for help.</string>
+    <string name="operation_cannot_be_proccessed">Operation cannot be processed with this card. Please, contact our Customer Support for more information.</string>
+    <string name="receiver_blocked">Operation cannot be processed because the receiver’s account is BLOCKED</string>
+
+    <!-- Contact information -->
+    <string name="info_first_name">First name:</string>
+    <string name="info_last_name">Last name:</string>
+    <string name="info_country">Country:</string>
+    <string name="info_email">E-mail:</string>
+    <string name="info_phone_number">Phone:</string>
+    <string name="info_gender">Gender:</string>
+
+    <!-- Delete record -->
+    <string name="deleteEntry">Delete entry</string>
+    <string name="deleteInfo">Are you sure you want to delete this entry ?</string>
+    <string name="successDelete">The contact is removed successful !</string>
+    <string name="notSuccessDelete">The contact is not removed successful !</string>
+
+    <!-- Update record -->
+    <string name="successUpdate">You edit contact successful</string>
+    <string name="notSuccessEdit">There is error with editing !</string>
+
+    <!-- Countries fragment -->
+    <string name="search">Search</string>
+    <string name="countries_api">https://restcountries.eu/rest/v1/all</string>
+    <string name="left_scope">(</string>                <!-- Left scope about calling code -->
+    <string name="calling_code_plus">+</string>         <!-- Plus about calling code -->
+    <string name="right_scope">)</string>               <!-- Right scope about calling code -->
+
+    <!-- Filter strings -->
+    <string name="reset">RESET</string>
+    <string name="apply">apply</string>
+
+    <string name="permission_denied_phone_call">If you want to call, you have to grant the permission !</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

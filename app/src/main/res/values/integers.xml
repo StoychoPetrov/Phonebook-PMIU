@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer name="fade_animation_duration">300</integer>
+    <integer name="fade_animation_start_offset">300</integer>
+
+</resources>
