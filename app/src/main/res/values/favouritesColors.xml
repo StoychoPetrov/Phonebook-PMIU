@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="favourite_colors">
+        <item>#0077C1</item>
+        <item>#f5ad1f</item>
+        <item>#4aba70</item>
+        <item>#f0c514</item>
+        <item>#8798cc</item>
+        <item>#93a5a5</item>
+        <item>#b39147</item>
+        <item>#cc9181</item>
+        <item>#3597d4</item>
+        <item>#6ec3a5</item>
+        <item>#80216b</item>
+        <item>#67b9ce</item>
+        <item>#7f6e5e</item>
+        <item>#ce7057</item>
+        <item>#55607e</item>
+        <item>#ccb394</item>
+        <item>#7d649b</item>
+        <item>#e79d23</item>
+        <item>#802f35</item>
+        <item>#894b9e</item>
+        <item>#17b9ad</item>
+        <item>#824221</item>
+        <item>#20a286</item>
+        <item>#f5671f</item>
+        <item>#34495e</item>
+        <item>#bdc2c8</item>
+        <item>#003e4a</item>
+        <item>#ce8552</item>
+        <item>#e84c3d</item>
+        <item>#7d8c8d</item>
+    </string-array>
+
+</resources>

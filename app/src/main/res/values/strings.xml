@@ -76,13 +76,4 @@
 
     <string name="permission_denied_phone_call">If you want to call, you have to grant the permission !</string>
 
-
-    <array name="contacts_colors">
-        <item>#e0e0e0</item>
-        <item>#3F51B5</item>
-        <item>#FF4081</item>
-        <item>#e5e500</item>
-        <item>#00e500</item>
-    </array>
-
 </resources>
