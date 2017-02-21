@@ -2,12 +2,11 @@ package com.example.stoycho.phonebook.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.stoycho.phonebook.R;
@@ -30,7 +29,7 @@ public class ContactsGridAdapter extends BaseAdapter{
     {
         mContacts              = contacts;
         mLayoutInflater        = ((Activity)context).getLayoutInflater();
-        mColors                = context.getResources().getStringArray(R.array.contacts_colors);
+        mColors                = context.getResources().getStringArray(R.array.favourite_colors);
     }
 
     @Override
@@ -52,7 +51,7 @@ public class ContactsGridAdapter extends BaseAdapter{
     public View getView(int position, View view, ViewGroup viewGroup) {
 
         if(view == null){
-            view          = mLayoutInflater.inflate(R.layout.contact_grid_item, null);
+            view          = mLayoutInflater.inflate(R.layout.item_grid_contact, null);
 
             ViewHolder viewHolder       = new ViewHolder();
 
@@ -65,9 +64,11 @@ public class ContactsGridAdapter extends BaseAdapter{
         ViewHolder  holder   = (ViewHolder) view.getTag();
         UserModel   contact  = mContacts.get(position);
 
-        holder.mNamePrefixTxt.setText(contact.getFirstName().substring(0,1).toUpperCase());
+        String namePrefix = contact.getFirstName().substring(0,1).toUpperCase();
+        holder.mNamePrefixTxt.setText(namePrefix);
         holder.mNameTxt.setText(contact.getFirstName());
 
+        view.setBackgroundColor(Color.parseColor(getColor(namePrefix)));
         return view;
     }
 
@@ -75,5 +76,17 @@ public class ContactsGridAdapter extends BaseAdapter{
 
         private TextView mNamePrefixTxt;
         private TextView mNameTxt;
+    }
+
+    private String getColor(String letter)
+    {
+        int index = 0;
+        for (char i = 'A'; i <= 'Z'; i ++)
+        {
+            if(letter.equalsIgnoreCase(String.valueOf(i)))
+                return mColors[index];
+            index++;
+        }
+        return null;
     }
 }

@@ -1,24 +1,11 @@
 package com.example.stoycho.phonebook.fragments;
 
-import android.Manifest;
 import android.animation.ValueAnimator;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -34,8 +21,6 @@ import android.view.animation.LinearInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -44,13 +29,12 @@ import android.widget.Toast;
 
 import com.example.stoycho.phonebook.Interfaces.OnRecyclerItemClick;
 import com.example.stoycho.phonebook.R;
+import com.example.stoycho.phonebook.activities.RegistrationActivity;
 import com.example.stoycho.phonebook.adapters.UsersRecyclerAdapter;
 import com.example.stoycho.phonebook.communicationClasses.HttpRequest;
 import com.example.stoycho.phonebook.database.CountriesDatabaseCommunication;
 import com.example.stoycho.phonebook.database.UsersAndCountruesDatabaseComunication;
 import com.example.stoycho.phonebook.database.UsersDatabaseCommunication;
-import com.example.stoycho.phonebook.fragments.CountriesFragment;
-import com.example.stoycho.phonebook.fragments.RegistrationFragment;
 import com.example.stoycho.phonebook.models.CountryModel;
 import com.example.stoycho.phonebook.models.UserModel;
 import com.example.stoycho.phonebook.utils.Utils;
@@ -64,7 +48,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContactsFragment extends Fragment implements View.OnClickListener,FragmentManager.OnBackStackChangedListener,OnRecyclerItemClick,RadioGroup.OnCheckedChangeListener,View.OnTouchListener,TextWatcher {
+public class ContactsFragment extends BaseFragment implements View.OnClickListener,FragmentManager.OnBackStackChangedListener,OnRecyclerItemClick,RadioGroup.OnCheckedChangeListener,View.OnTouchListener,TextWatcher {
 
     private RecyclerView                mRecyclerView;
     private UsersRecyclerAdapter        mRecyclerAdapter;
@@ -97,7 +81,6 @@ public class ContactsFragment extends Fragment implements View.OnClickListener,F
 
     private final static int    PICK_IMAGE                              = 1;
     private final static String ALL_COUNTRIES_ARE_SELECTED              = "all_selected";
-    private final        int    MY_PERMISSIONS_REQUEST_CALL_PHONE       = 2;
 
 
     @Override
@@ -124,7 +107,6 @@ public class ContactsFragment extends Fragment implements View.OnClickListener,F
         }
 
         getFragmentManager().addOnBackStackChangedListener(this);
-        checkPermissions();
 
         mFilterLayout.measure(0,0);
 //        mBar.measure(0,0);
@@ -197,20 +179,6 @@ public class ContactsFragment extends Fragment implements View.OnClickListener,F
             mNewContactButton.setVisibility(View.VISIBLE);
     }
 
-    private void checkPermissions()
-    {
-        if (ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.CALL_PHONE)
-                != PackageManager.PERMISSION_GRANTED) {
-            if (!ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                    Manifest.permission.CALL_PHONE)) {
-                ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{Manifest.permission.CALL_PHONE,Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        MY_PERMISSIONS_REQUEST_CALL_PHONE);
-            }
-        }
-    }
-
     private void replaceElementsWithFade(final View visibleView, final View goneView)
     {
 
@@ -279,7 +247,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener,F
     private void loadUsers()
     {
         mCountries      = new ArrayList<>();
-        mUsers          = UsersAndCountruesDatabaseComunication.getInstance(getActivity()).selectUsersAndTheirCountries(mCountries,UsersAndCountruesDatabaseComunication.WITHOUT_COUNTRY_ID,null,null,null);  // make query for all users with their countries from Users table and Countries table
+        mUsers          = UsersAndCountruesDatabaseComunication.getInstance(getActivity()).selectUsersAndTheirCountries(mCountries,UsersAndCountruesDatabaseComunication.WITHOUT_COUNTRY_ID,null,null,null,true);  // make query for all users with their countries from Users table and Countries table
 
         mRecyclerAdapter.setUsersAndCountries(mUsers);
         mRecyclerAdapter.notifyDataSetChanged();
@@ -362,7 +330,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener,F
         if(gender.equals(getString(R.string.all)))
            gender = null;
 
-        mUsers                  = UsersAndCountruesDatabaseComunication.getInstance(getActivity()).selectUsersAndTheirCountries(mCountries,filterCountryId, gender,null,mSearchCountryEdb.getText().toString());
+        mUsers                  = UsersAndCountruesDatabaseComunication.getInstance(getActivity()).selectUsersAndTheirCountries(mCountries,filterCountryId, gender,null,mSearchCountryEdb.getText().toString(),true);
 
         mRecyclerAdapter.setUsersAndCountries(mUsers);
         mRecyclerAdapter.notifyDataSetChanged();
@@ -394,8 +362,9 @@ public class ContactsFragment extends Fragment implements View.OnClickListener,F
 
     private void onAddUser()                                                           //start RegisterFragment
     {
-        getFragmentManager().beginTransaction().setCustomAnimations(android.R.anim.fade_in,0,0,android.R.anim.fade_out).replace(R.id.replace_layout,new RegistrationFragment(), Utils.REGISTRATION_FRAGMENT_TAG)
-                .addToBackStack(Utils.REGISTRATION_BACKSTACK_NAME).commit();
+        Intent registrationActivity = new Intent(getActivity(),RegistrationActivity.class);
+        getActivity().overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
+        startActivity(registrationActivity);
     }
 
     private void updateUser(UserModel user, CountryModel country, int position)                     //update user in ListView
@@ -451,22 +420,15 @@ public class ContactsFragment extends Fragment implements View.OnClickListener,F
 
     private void onEdit(int position)                                            //start RegistrationFragment for editing user information
     {
-        RegistrationFragment    registrationFragment    = new RegistrationFragment();
-        Bundle                  bundle                  = new Bundle();
-        UserModel user                    = mUsers.get(position);
-        CountryModel country                 = mCountries.get(position);
+        UserModel user                      = mUsers.get(position);
+        CountryModel country                = mCountries.get(position);
 
-        bundle.putParcelable(Utils.BUNDLE_COUNTRY_KEY,country);
-        bundle.putParcelable(Utils.BUNDLE_USER_KEY,user);
-        bundle.putInt(Utils.BUNDLE_POSITION_KEY,position);
-
-        registrationFragment.setArguments(bundle);
-
-        getFragmentManager().beginTransaction().setCustomAnimations(android.R.anim.fade_in,0,0,android.R.anim.fade_out).replace(R.id.replace_layout,registrationFragment, Utils.REGISTRATION_FRAGMENT_TAG)
-                .addToBackStack(Utils.REGISTRATION_BACKSTACK_NAME).commit();
-
-//        mTitleTxt.setText(getString(R.string.contact_information));
-        onPause();
+        Intent registrationActivity = new Intent(getActivity(),RegistrationActivity.class);
+        registrationActivity.putExtra(Utils.BUNDLE_USER_KEY,user);
+        registrationActivity.putExtra(Utils.BUNDLE_COUNTRY_KEY,country);
+        registrationActivity.putExtra(Utils.BUNDLE_POSITION_KEY,position);
+        startActivity(registrationActivity);
+        getActivity().overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
     }
 
     @Override
@@ -539,8 +501,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener,F
         switch (clickedViewId)
         {
             case R.id.call_button:
-                String phoneNumber = getString(R.string.plus) + mCountries.get(position).getCallingCode() +  mUsers.get(position).getPhoneNumber();
-                callToNumber(phoneNumber);
+                callToNumber(mCountries.get(position).getCallingCode(),mUsers.get(position));
                 break;
             case R.id.user_item:
                 onEdit(position);
@@ -594,35 +555,6 @@ public class ContactsFragment extends Fragment implements View.OnClickListener,F
 //        }
 //        mSelectedItemPosition = Utils.INVALID_ROW_INDEX;
 //    }
-
-    private void callToNumber(String number)
-    {
-        if(number != null && !number.equals("")) {
-
-            Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse(getString(R.string.tel) + number));
-
-            if (ContextCompat.checkSelfPermission(getActivity(),
-                    Manifest.permission.CALL_PHONE)
-                    == PackageManager.PERMISSION_GRANTED) {
-                startActivity(callIntent);
-            } else
-                checkPermissions();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String permissions[], @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_CALL_PHONE: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length == 0
-                        || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(getActivity(), R.string.permission_denied_phone_call, Toast.LENGTH_SHORT).show();
-                }
-            }
-        }
-    }
 
     @Override
     public void onCheckedChanged(RadioGroup radioGroup, int checkedButtonId) {
@@ -701,7 +633,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener,F
                 filterCountryId = Utils.INVALID_ROW_INDEX;
 
             if(!mNotCountrySearching) {
-                mUsers = UsersAndCountruesDatabaseComunication.getInstance(getActivity()).selectUsersAndTheirCountries(mCountries, filterCountryId, mFilterGender, null, mSearchCountryEdb.getText().toString());
+                mUsers = UsersAndCountruesDatabaseComunication.getInstance(getActivity()).selectUsersAndTheirCountries(mCountries, filterCountryId, mFilterGender, null, mSearchCountryEdb.getText().toString(),true);
                 mRecyclerAdapter.setUsersAndCountries(mUsers);
                 mRecyclerAdapter.notifyDataSetChanged();
 

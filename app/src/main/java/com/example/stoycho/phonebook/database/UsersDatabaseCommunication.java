@@ -12,17 +12,6 @@ import com.example.stoycho.phonebook.models.UserModel;
 
 public class UsersDatabaseCommunication extends Database {
 
-    /********** Users table columns ************/
-    private final static String COLUMN_USER_ID          = "user_id";
-    private final static String COLUMN_FIRST_NAME       = "first_name";
-    private final static String COLUMN_LAST_NAME        = "last_name";
-    private final static String COLUMN_EMAIL            = "email";
-    private final static String COLUMN_PHONE_NUMBER     = "phone_number";
-    private final static String COLUMN_GENDER           = "gender";
-    private final static String COLUMN_IMAGE            = "image";
-    private final static String COLUMN_COUNTRY_ID_FK    = "coutry_id_fk";
-
-    private final static String USERS_TABLE_NAME        = "users";
     private static UsersDatabaseCommunication instance  = null;
 
     private UsersDatabaseCommunication(Context context) {
@@ -44,6 +33,7 @@ public class UsersDatabaseCommunication extends Database {
         values.put(COLUMN_EMAIL,            user.getEmail());
         values.put(COLUMN_PHONE_NUMBER,     user.getPhoneNumber());
         values.put(COLUMN_GENDER,           user.getGender());
+        values.put(COLUMN_CALLS_COUNT,      0);
         values.put(COLUMN_COUNTRY_ID_FK,    user.getCountry());
         long id = db.insert(USERS_TABLE_NAME, null, values);
         db.close();
@@ -83,6 +73,17 @@ public class UsersDatabaseCommunication extends Database {
         SQLiteDatabase database = getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_IMAGE, imagePath);
+        int result = database.update(USERS_TABLE_NAME,values,COLUMN_USER_ID + "=?",new String[]{String.valueOf(userId)});
+        database.close();
+
+        return result > 0;
+    }
+
+    public boolean updateCallsCounts(int userId, int callCount)
+    {
+        SQLiteDatabase database = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_CALLS_COUNT, callCount);
         int result = database.update(USERS_TABLE_NAME,values,COLUMN_USER_ID + "=?",new String[]{String.valueOf(userId)});
         database.close();
 

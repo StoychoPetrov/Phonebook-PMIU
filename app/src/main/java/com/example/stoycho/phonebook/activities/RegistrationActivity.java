@@ -1,13 +1,12 @@
-package com.example.stoycho.phonebook.fragments;
+package com.example.stoycho.phonebook.activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Patterns;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,8 +15,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.stoycho.phonebook.R;
+import com.example.stoycho.phonebook.activities.BaseActivity;
 import com.example.stoycho.phonebook.database.UsersAndCountruesDatabaseComunication;
 import com.example.stoycho.phonebook.database.UsersDatabaseCommunication;
+import com.example.stoycho.phonebook.fragments.CountriesFragment;
 import com.example.stoycho.phonebook.models.CountryModel;
 import com.example.stoycho.phonebook.models.UserModel;
 import com.example.stoycho.phonebook.utils.Utils;
@@ -25,7 +26,7 @@ import com.example.stoycho.phonebook.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RegistrationFragment extends BaseFragment implements View.OnClickListener, View.OnFocusChangeListener {
+public class RegistrationActivity extends BaseActivity implements View.OnClickListener, View.OnFocusChangeListener {
 
     private EditText    mFirstNameEdb;
     private EditText    mLastNameEdb;
@@ -49,37 +50,31 @@ public class RegistrationFragment extends BaseFragment implements View.OnClickLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_registration, container, false);
-        initUI(root);
+        setContentView(R.layout.fragment_registration);
+        
+        initUI();
         setListeners();
 
-        if(getArguments() != null && getArguments().containsKey(Utils.BUNDLE_USER_KEY))
+        if(getIntent() != null && getIntent().hasExtra(Utils.BUNDLE_USER_KEY))
             setInformations();
-
-        return root;
     }
-
-    private void initUI(View root)
+    
+    private void initUI()
     {
-        mFirstNameEdb       = (EditText)    root.findViewById(R.id.first_name);
-        mLastNameEdb        = (EditText)    root.findViewById(R.id.last_name);
-        mCountryEdb         = (EditText)    root.findViewById(R.id.country);
-        mEmailEdb           = (EditText)    root.findViewById(R.id.email);
-        mPhoneNumberEdb     = (EditText)    root.findViewById(R.id.phone_number);
-        mCallingCodeTxt     = (TextView)    root.findViewById(R.id.callingCode);
-        mFirstNameTxt       = (TextView)    root.findViewById(R.id.first_name_txt);
-        mLastNameTxt        = (TextView)    root.findViewById(R.id.last_name_txt);
-        mEmailTxt           = (TextView)    root.findViewById(R.id.email_txt);
-        mPhoneTxt          = (TextView)    root.findViewById(R.id.phone_txt);
-        mMaleRadioBtn       = (RadioButton) root.findViewById(R.id.male);
-        mFemaleRadioBtn     = (RadioButton) root.findViewById(R.id.female);
-        mAddBtn             = (Button)      root.findViewById(R.id.add);
-        mDelete             = (Button)      root.findViewById(R.id.delete);
+        mFirstNameEdb       = (EditText)    findViewById(R.id.first_name);
+        mLastNameEdb        = (EditText)    findViewById(R.id.last_name);
+        mCountryEdb         = (EditText)    findViewById(R.id.country);
+        mEmailEdb           = (EditText)    findViewById(R.id.email);
+        mPhoneNumberEdb     = (EditText)    findViewById(R.id.phone_number);
+        mCallingCodeTxt     = (TextView)    findViewById(R.id.callingCode);
+        mFirstNameTxt       = (TextView)    findViewById(R.id.first_name_txt);
+        mLastNameTxt        = (TextView)    findViewById(R.id.last_name_txt);
+        mEmailTxt           = (TextView)    findViewById(R.id.email_txt);
+        mPhoneTxt           = (TextView)    findViewById(R.id.phone_txt);
+        mMaleRadioBtn       = (RadioButton) findViewById(R.id.male);
+        mFemaleRadioBtn     = (RadioButton) findViewById(R.id.female);
+        mAddBtn             = (Button)      findViewById(R.id.add);
+        mDelete             = (Button)      findViewById(R.id.delete);
     }
 
     private void setListeners()
@@ -97,10 +92,10 @@ public class RegistrationFragment extends BaseFragment implements View.OnClickLi
 
     private void setInformations()
     {
-        if(getArguments() != null) {
+        if(getIntent() != null) {
 
-            CountryModel country = getArguments().getParcelable(Utils.BUNDLE_COUNTRY_KEY);
-            UserModel user       = getArguments().getParcelable(Utils.BUNDLE_USER_KEY);
+            CountryModel    country     = getIntent().getParcelableExtra(Utils.BUNDLE_COUNTRY_KEY);
+            UserModel       user        = getIntent().getParcelableExtra(Utils.BUNDLE_USER_KEY);
 
             if(user != null && country != null) {                                               // if user is not null, set user information in boxes.
                 mFirstNameEdb.setText(user.getFirstName());
@@ -150,7 +145,7 @@ public class RegistrationFragment extends BaseFragment implements View.OnClickLi
                 if(mAddBtn.getText().toString().equals(getString(R.string.save))) {
                     mPhoneNumberEdb.clearFocus();
                     mEmailEdb.clearFocus();
-                    if (getArguments() == null)
+                    if (!getIntent().hasExtra(Utils.BUNDLE_USER_KEY))
                         onAdd();
                     else
                         onEdit();
@@ -169,12 +164,12 @@ public class RegistrationFragment extends BaseFragment implements View.OnClickLi
 
     private void deleteUser()
     {
-        new AlertDialog.Builder(getActivity())
+        new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.deleteEntry))
                 .setMessage(getString(R.string.deleteInfo))
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        getActivity().getIntent().putExtra(Utils.INTENT_DELETE_USER_POSITION,getArguments().getInt(Utils.BUNDLE_POSITION_KEY));
+                        getIntent().putExtra(Utils.INTENT_DELETE_USER_POSITION,getIntent().getIntExtra(Utils.BUNDLE_POSITION_KEY,-1));
                         getFragmentManager().popBackStack();
                     }
                 })
@@ -203,7 +198,7 @@ public class RegistrationFragment extends BaseFragment implements View.OnClickLi
         if(!mFirstNameEdb.getText().toString().equals("") && !mLastNameEdb.getText().toString().equals("") && !mCountryEdb.getText().toString().equals("")
                 && !mEmailEdb.getText().toString().equals("") && !mHasEmailError && !mHasPhoneError && (mMaleRadioBtn.isChecked() || mFemaleRadioBtn.isChecked()))                  // if every box is correct, will show dialog with question to user, in another case will show message with error.
         {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage(R.string.updateInfo)
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
@@ -220,17 +215,17 @@ public class RegistrationFragment extends BaseFragment implements View.OnClickLi
             builder.show();
         }
         else
-            Toast.makeText(getActivity(),getString(R.string.registrationError),Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,getString(R.string.registrationError),Toast.LENGTH_SHORT).show();
     }
 
     private void updateUser()
     {
-        UsersDatabaseCommunication usersDatabaseCommunication = UsersDatabaseCommunication.getInstance(getActivity());
+        UsersDatabaseCommunication usersDatabaseCommunication = UsersDatabaseCommunication.getInstance(this);
 
         UserModel user                                               = new UserModel(mFirstNameEdb.getText().toString(),mLastNameEdb.getText().toString(),mCountryEdbId,mEmailEdb.getText().toString(),
-                                                                        mPhoneNumberEdb.getText().toString(),mMaleRadioBtn.isChecked() ? getString(R.string.male):getString(R.string.female));
+                                                                        mPhoneNumberEdb.getText().toString(),mMaleRadioBtn.isChecked() ? getString(R.string.male):getString(R.string.female),0);
         CountryModel country                                         = new CountryModel(mCountryEdb.getText().toString(),mPhoneCode);
-        UserModel parcedUser                                         = getArguments().getParcelable(Utils.BUNDLE_USER_KEY);
+        UserModel parcedUser                                         = getIntent().getParcelableExtra(Utils.BUNDLE_USER_KEY);
         int userId;
 
         if(parcedUser != null)
@@ -240,15 +235,15 @@ public class RegistrationFragment extends BaseFragment implements View.OnClickLi
 
         user.setId(userId);
         if(usersDatabaseCommunication.updateUserInDatabase(user)) {                                     // if status of update query is siccess ,it will pop the fragment and show message. In other case will show error message.
-            Toast.makeText(getActivity(), R.string.successUpdate, Toast.LENGTH_SHORT).show();
-            getActivity().getIntent().putExtra(Utils.BUNDLE_USER_KEY,user);
-            getActivity().getIntent().putExtra(Utils.BUNDLE_COUNTRY_KEY,country);
-            getActivity().getIntent().putExtra(Utils.BUNDLE_POSITION_KEY,getArguments().getInt(Utils.BUNDLE_POSITION_KEY));
-            getActivity().getIntent().putExtra(Utils.INTENT_UPDATE_USER_KEY,true);
+            Toast.makeText(this, R.string.successUpdate, Toast.LENGTH_SHORT).show();
+            this.getIntent().putExtra(Utils.BUNDLE_USER_KEY,user);
+            this.getIntent().putExtra(Utils.BUNDLE_COUNTRY_KEY,country);
+            this.getIntent().putExtra(Utils.BUNDLE_POSITION_KEY,getIntent().getIntExtra(Utils.BUNDLE_POSITION_KEY,-1));
+            this.getIntent().putExtra(Utils.INTENT_UPDATE_USER_KEY,true);
             getFragmentManager().popBackStack();
         }
         else
-            Toast.makeText(getActivity(),R.string.notSuccessEdit,Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,R.string.notSuccessEdit,Toast.LENGTH_SHORT).show();
     }
 
     private void onAdd()                                                                                                                                    //if every box is correct , it wil show question to user.
@@ -256,9 +251,9 @@ public class RegistrationFragment extends BaseFragment implements View.OnClickLi
         if(!mFirstNameEdb.getText().toString().equals("") && !mLastNameEdb.getText().toString().equals("") && !mCountryEdb.getText().toString().equals("")
                 && !mEmailEdb.getText().toString().equals("") && !mHasEmailError && !mHasPhoneError && (mMaleRadioBtn.isChecked() || mFemaleRadioBtn.isChecked()))
         {
-            List<UserModel> users = UsersAndCountruesDatabaseComunication.getInstance(getActivity()).selectUsersAndTheirCountries(new ArrayList<CountryModel>(),-1,null,mPhoneNumberEdb.getText().toString(),null);
+            List<UserModel> users = UsersAndCountruesDatabaseComunication.getInstance(this).selectUsersAndTheirCountries(new ArrayList<CountryModel>(),-1,null,mPhoneNumberEdb.getText().toString(),null,false);
             if(users.size() == 0) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage(R.string.message_for_dialog)
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
@@ -274,53 +269,53 @@ public class RegistrationFragment extends BaseFragment implements View.OnClickLi
                 builder.show();
             }
             else
-                Toast.makeText(getActivity(),getString(R.string.sameNumber),Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,getString(R.string.sameNumber),Toast.LENGTH_SHORT).show();
         }
         else if(mHasEmailError)
         {
-            Toast.makeText(getActivity(),R.string.invalid_email,Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,R.string.invalid_email,Toast.LENGTH_SHORT).show();
         }
         else if(mHasPhoneError)
         {
-            Toast.makeText(getActivity(),R.string.invalid_phone,Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,R.string.invalid_phone,Toast.LENGTH_SHORT).show();
         }
         else
         {
-            Toast.makeText(getActivity(),R.string.empty_box,Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,R.string.empty_box,Toast.LENGTH_SHORT).show();
         }
     }
 
     private void registerUser()
     {
-        UsersDatabaseCommunication usersDatabaseCommunication = UsersDatabaseCommunication.getInstance(getActivity());
+        UsersDatabaseCommunication usersDatabaseCommunication = UsersDatabaseCommunication.getInstance(this);
 
         UserModel user = new UserModel(mFirstNameEdb.getText().toString(),mLastNameEdb.getText().toString(),mCountryEdbId,mEmailEdb.getText().toString()
-                ,mPhoneNumberEdb.getText().toString(),mMaleRadioBtn.isChecked() ? getString(R.string.male):getString(R.string.female));
+                ,mPhoneNumberEdb.getText().toString(),mMaleRadioBtn.isChecked() ? getString(R.string.male):getString(R.string.female),0);
         CountryModel country = new CountryModel(mCountryEdb.getText().toString(),mPhoneCode);
         long id = usersDatabaseCommunication.saveInDatabase(user);                                                      // Trying to save the new contact. If the query is successed, the id is different from -1. If it is equal to -1, there is error with query.
         if(id != -1) {
             user.setId((int) id);
-            Toast.makeText(getActivity(), R.string.message_for_register, Toast.LENGTH_SHORT).show();
-            getActivity().getIntent().putExtra(Utils.BUNDLE_USER_KEY,user);
-            getActivity().getIntent().putExtra(Utils.BUNDLE_COUNTRY_KEY,country);
-            getActivity().getIntent().putExtra(Utils.INTENT_REFRESH_USERS_KEY,true);
-            getFragmentManager().popBackStack();
+            Toast.makeText(this, R.string.message_for_register, Toast.LENGTH_SHORT).show();
+            getIntent().putExtra(Utils.BUNDLE_USER_KEY,user);
+            getIntent().putExtra(Utils.BUNDLE_COUNTRY_KEY,country);
+            getIntent().putExtra(Utils.INTENT_REFRESH_USERS_KEY,true);
+            finish();
         }
         else
-            Toast.makeText(getActivity(),R.string.register_error,Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,R.string.register_error,Toast.LENGTH_SHORT).show();
     }
 
     private void onCountry()                                                                                            // User has selected country box and it will start CountryFragment
     {
-        View viewFocus = getActivity().getCurrentFocus();
+        View viewFocus = this.getCurrentFocus();
 
         if (viewFocus != null) {
-            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager)this.getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(viewFocus.getWindowToken(), 0);
         }
 
-        getFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_down,0,0,R.anim.slide_up)
-                .add(R.id.replace_layout,new CountriesFragment(), Utils.COIUNTRIES_FRAGMENT_TAG).addToBackStack(Utils.COUNTRY_BACKSTACK_NAME).commit();
+        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_down,0,0,R.anim.slide_up)
+                .add(R.id.main_layout,new CountriesFragment(), Utils.COIUNTRIES_FRAGMENT_TAG).addToBackStack(Utils.COUNTRY_BACKSTACK_NAME).commit();
     }
 
     public void setSelectedCountry(CountryModel country)

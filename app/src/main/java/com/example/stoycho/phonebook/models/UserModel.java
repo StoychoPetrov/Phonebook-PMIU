@@ -17,17 +17,20 @@ public class UserModel implements Parcelable{
     private String  mPhoneNumber;
     private String  mGender;
     private String  mImage;
+    private int     mCallsCount;
 
     public UserModel() {
     }
 
-    public UserModel(String firstName, String lastName, int countryId, String email, String phoneNumber, String gender) {
+    public UserModel(String firstName, String lastName, int countryId, String email, String phoneNumber, String gender, int callsCount) {
         mFirstName     = firstName;
         mLastName      = lastName;
         mCountryId     = countryId;
         mEmail         = email;
         mPhoneNumber   = phoneNumber;
         mGender        = gender;
+        mCallsCount    = callsCount;
+
     }
 
     private UserModel(Parcel in)
@@ -40,6 +43,7 @@ public class UserModel implements Parcelable{
         mPhoneNumber   = in.readString();
         mGender        = in.readString();
         mImage         = in.readString();
+        mCallsCount    = in.readInt();
     }
 
     public int getId() {
@@ -106,6 +110,14 @@ public class UserModel implements Parcelable{
         this.mImage = mImage;
     }
 
+    public int getmCallsCount() {
+        return mCallsCount;
+    }
+
+    public void setmCallsCount(int mCallsCount) {
+        this.mCallsCount = mCallsCount;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -121,6 +133,7 @@ public class UserModel implements Parcelable{
         parcel.writeString(mPhoneNumber);
         parcel.writeString(mGender);
         parcel.writeString(mImage);
+        parcel.writeInt(mCallsCount);
     }
 
     public static final Parcelable.Creator CREATOR = new ClassLoaderCreator() {

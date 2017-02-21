@@ -50,7 +50,7 @@ public class CountriesRecyclerAdapter extends RecyclerView.Adapter<CountriesRecy
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.country_item,parent,false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_country,parent,false);
         return new ViewHolder(itemView);
     }
 

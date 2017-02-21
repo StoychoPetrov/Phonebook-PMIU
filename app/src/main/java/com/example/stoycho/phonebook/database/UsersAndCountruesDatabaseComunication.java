@@ -16,33 +16,17 @@ import java.util.List;
 
 public class UsersAndCountruesDatabaseComunication extends Database {
 
-    /********** Table names **************/
-    private final static String USERS_TABLE_NAME        = "users";
-    private final static String COUNTRIES_TABLE_NAME    = "countries";
-
-    /********** Users table columns ************/
-    private final static String COLUMN_USER_ID          = "user_id";
-    private final static String COLUMN_FIRST_NAME       = "first_name";
-    private final static String COLUMN_LAST_NAME        = "last_name";
-    private final static String COLUMN_EMAIL            = "email";
-    private final static String COLUMN_PHONE_NUMBER     = "phone_number";
-    private final static String COLUMN_GENDER           = "gender";
-    private final static String COLUMN_IMAGE            = "image";
-    private final static String COLUMN_COUNTRY_ID_FK    = "coutry_id_fk";
-
-    /*********** Countries table columns*********/
-    private final static String COLUMN_COUNTRY_ID       = "country_id";
-    private final static String COLUMN_COUNTRY_NAME     = "country_name";
-    private final static String COLUMN_CALLING_CODE     = "calling_code";
 
     public final    static int                                      WITHOUT_COUNTRY_ID   = -1;
     private         static UsersAndCountruesDatabaseComunication    instance             = null;
+
+    private boolean mOrderByCallingCount;
 
     private UsersAndCountruesDatabaseComunication(Context context) {
         super(context);
     }
 
-    public List<UserModel> selectUsersAndTheirCountries(List<CountryModel> countries, int countryId, String gender, String phone, String filterByName)
+    public List<UserModel> selectUsersAndTheirCountries(List<CountryModel> countries, int countryId, String gender, String phone, String filterByName,boolean orderByName)
     {
 
         boolean hasWhereClause = false;
@@ -76,8 +60,41 @@ public class UsersAndCountruesDatabaseComunication extends Database {
             query += " WHERE users." + COLUMN_FIRST_NAME + " LIKE '" + filterByName + "%'";
         }
 
+        if(orderByName)
+            query += " ORDER BY " + COLUMN_FIRST_NAME;
 
-        List<UserModel>     users    = new ArrayList<>();
+        if(mOrderByCallingCount)
+            query += " ORDER BY " + COLUMN_CALLS_COUNT + " DESC ";
+
+        List<UserModel> users = new ArrayList<>();
+
+        select(query,countries,users);
+
+        return users;
+    }
+
+    public UserModel selectUserById(int userId,CountryModel countryModel)
+    {
+        String query = "SELECT * "
+            +  "FROM " + USERS_TABLE_NAME + " users " + "INNER JOIN " + COUNTRIES_TABLE_NAME + " countries "
+            +  "ON " + "users." + COLUMN_COUNTRY_ID_FK + " = countries." + COLUMN_COUNTRY_ID + " WHERE users." + COLUMN_USER_ID + " = " + userId;
+
+        List<UserModel>     users       = new ArrayList<>();
+        List<CountryModel>  countries   = new ArrayList<>();
+
+        select(query,countries,users);
+
+        if(countries.size() > 0 )
+            countryModel    = countries.get(0);
+
+        if(users.size() > 0)
+            return users.get(0);
+        else
+            return null;
+    }
+
+    private void select(String query,List<CountryModel> countries, List<UserModel> users)
+    {
         SQLiteDatabase database = getWritableDatabase();
         Cursor         cursor   = database.rawQuery(query, null);
         if (cursor.moveToFirst()) {
@@ -93,6 +110,7 @@ public class UsersAndCountruesDatabaseComunication extends Database {
                 user.setPhoneNumber(cursor.getString(cursor.getColumnIndex(COLUMN_PHONE_NUMBER)));
                 user.setmImage(cursor.getString(cursor.getColumnIndex(COLUMN_IMAGE)));
                 user.setCountry(cursor.getInt(cursor.getColumnIndex(COLUMN_COUNTRY_ID_FK)));
+                user.setmCallsCount(cursor.getInt(cursor.getColumnIndex(COLUMN_CALLS_COUNT)));
                 users.add(user);
 
                 country.setId(cursor.getInt(cursor.getColumnIndex(COLUMN_COUNTRY_ID)));
@@ -103,7 +121,6 @@ public class UsersAndCountruesDatabaseComunication extends Database {
         }
         cursor.close();
         database.close();
-        return users;
     }
 
     public static UsersAndCountruesDatabaseComunication getInstance(Context context)
@@ -111,5 +128,10 @@ public class UsersAndCountruesDatabaseComunication extends Database {
         if(instance == null)
             instance = new UsersAndCountruesDatabaseComunication(context);
         return instance;
+    }
+
+    public void setOrderByCallingCount(boolean orderByCallingCount)
+    {
+        mOrderByCallingCount = orderByCallingCount;
     }
 }

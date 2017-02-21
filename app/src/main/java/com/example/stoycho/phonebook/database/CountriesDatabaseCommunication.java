@@ -16,12 +16,6 @@ import java.util.List;
 
 public class CountriesDatabaseCommunication extends Database {
 
-    /**************** Countries columns *************************/
-    private final static String COLUMN_COUNTRY_ID       = "country_id";
-    private final static String COLUMN_COUNTRY_NAME     = "country_name";
-    private final static String COLUMN_CALLING_CODE     = "calling_code";
-    private final static String COUNTRIES_TABLE_NAME    = "countries";
-
     public final static int SELECT_ALL_COUNTRIES        = 0;
     public final static int SELECT_SEARCH_PLACES        = 1;
 

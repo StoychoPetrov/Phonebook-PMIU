@@ -15,30 +15,40 @@ public class Database extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION           = 1;
 
     /********** Table names **************/
-    private final static String USERS_TABLE_NAME        = "users";
-    private final static String COUNTRIES_TABLE_NAME    = "countries";
+    protected final static String USERS_TABLE_NAME        = "users";
+    protected final static String COUNTRIES_TABLE_NAME    = "countries";
+    protected final static String HISTORY_TABLE_NAME      = "histories";
 
     /********** Users table columns ************/
-    private final static String COLUMN_USER_ID          = "user_id";
-    private final static String COLUMN_FIRST_NAME       = "first_name";
-    private final static String COLUMN_LAST_NAME        = "last_name";
-    private final static String COLUMN_EMAIL            = "email";
-    private final static String COLUMN_PHONE_NUMBER     = "phone_number";
-    private final static String COLUMN_GENDER           = "gender";
-    private final static String COLUMN_IMAGE            = "image";
-    private final static String COLUMN_COUNTRY_ID_FK    = "coutry_id_fk";
+    protected final static String COLUMN_USER_ID          = "user_id";
+    protected final static String COLUMN_FIRST_NAME       = "first_name";
+    protected final static String COLUMN_LAST_NAME        = "last_name";
+    protected final static String COLUMN_EMAIL            = "email";
+    protected final static String COLUMN_PHONE_NUMBER     = "phone_number";
+    protected final static String COLUMN_GENDER           = "gender";
+    protected final static String COLUMN_IMAGE            = "image";
+    protected final static String COLUMN_CALLS_COUNT      = "calls_count";
+    protected final static String COLUMN_COUNTRY_ID_FK    = "coutry_id_fk";
 
     /*********** Countries table columns*********/
-    private final static String COLUMN_COUNTRY_ID       = "country_id";
-    private final static String COLUMN_COUNTRY_NAME     = "country_name";
-    private final static String COLUMN_CALLING_CODE     = "calling_code";
+    protected final static String COLUMN_COUNTRY_ID       = "country_id";
+    protected final static String COLUMN_COUNTRY_NAME     = "country_name";
+    protected final static String COLUMN_CALLING_CODE     = "calling_code";
+
+    /*********** History table columns ***********/
+    protected final static String COLUMN_HISTORY_ID             = "history_id";
+    protected final static String COLUMN_HISTORY_DATE           = "history_date";
+    protected final static String COLUMN_USER_ID_FORIGN_KEY     = "user_id";
 
     /*********** Create tables *******************/
     private final static String CREATE_USERS = " CREATE TABLE " + USERS_TABLE_NAME + " ( " + COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_FIRST_NAME + " TEXT, " + COLUMN_LAST_NAME + " TEXT, "
-            + COLUMN_EMAIL + " TEXT, " + COLUMN_PHONE_NUMBER + " TEXT, " + COLUMN_GENDER + " TEXT, " + COLUMN_IMAGE + " TEXT, " + COLUMN_COUNTRY_ID_FK + " INTEGER, FOREIGN KEY (" + COLUMN_COUNTRY_ID_FK + ") REFERENCES " + COUNTRIES_TABLE_NAME
+            + COLUMN_EMAIL + " TEXT, " + COLUMN_PHONE_NUMBER + " TEXT, " + COLUMN_GENDER + " TEXT, " + COLUMN_IMAGE + " TEXT, " + COLUMN_CALLS_COUNT + " INTEGER, " + COLUMN_COUNTRY_ID_FK + " INTEGER, FOREIGN KEY (" + COLUMN_COUNTRY_ID_FK + ") REFERENCES " + COUNTRIES_TABLE_NAME
             + "(" + COLUMN_COUNTRY_ID + "))";
+
     private final static String CREATE_COUNTRIES = " CREATE TABLE " + COUNTRIES_TABLE_NAME + " ( " + COLUMN_COUNTRY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_COUNTRY_NAME + " TEXT, "
             + COLUMN_CALLING_CODE + " TEXT)";
+
+    private final static String CREATE_HISTORY   = " CREATE TABLE " + HISTORY_TABLE_NAME + " ( " + COLUMN_HISTORY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_HISTORY_DATE + " TEXT, " + COLUMN_USER_ID_FORIGN_KEY + " INTEGER, FOREIGN KEY (" + COLUMN_USER_ID_FORIGN_KEY + ") REFERENCES " + USERS_TABLE_NAME + "(" + COLUMN_USER_ID + "))";
 
     public Database(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -48,6 +58,7 @@ public class Database extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase database) {
         database.execSQL(CREATE_COUNTRIES);
         database.execSQL(CREATE_USERS);
+        database.execSQL(CREATE_HISTORY);
     }
 
     @Override
@@ -55,6 +66,7 @@ public class Database extends SQLiteOpenHelper {
         if(oldVersion != newVersion) {
             database.execSQL("DROP TABLE IF EXISTS " + USERS_TABLE_NAME);
             database.execSQL("DROP TABLE IF EXISTS " + COUNTRIES_TABLE_NAME);
+            database.execSQL("DROP TABLE IF EXISTS " + HISTORY_TABLE_NAME);
             onCreate(database);
         }
     }

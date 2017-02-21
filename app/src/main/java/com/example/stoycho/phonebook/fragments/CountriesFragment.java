@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.example.stoycho.phonebook.Interfaces.OnRecyclerItemClick;
 import com.example.stoycho.phonebook.R;
+import com.example.stoycho.phonebook.activities.RegistrationActivity;
 import com.example.stoycho.phonebook.adapters.CountriesRecyclerAdapter;
 import com.example.stoycho.phonebook.database.CountriesDatabaseCommunication;
 import com.example.stoycho.phonebook.models.CountryModel;
@@ -107,13 +108,11 @@ public class CountriesFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void onRecyclerItemClickListener(View view, int position) {
-        RegistrationFragment registrationFragment = (RegistrationFragment) getFragmentManager().findFragmentByTag(Utils.REGISTRATION_FRAGMENT_TAG);                  // check if RegistrationFragment is already exist.
 
-        if(registrationFragment != null) {
-            getFragmentManager().popBackStack(Utils.REGISTRATION_BACKSTACK_NAME,0);                                                                                 // RegistrationFragment is exist and pop fragments while RegistrationFragment become visible.
-            registrationFragment.setSelectedCountry(mCountries.get(position));
+        if(getActivity() instanceof RegistrationActivity) {
+            ((RegistrationActivity)getActivity()).setSelectedCountry(mCountries.get(position));
         }
-        else if(getFragmentManager().getBackStackEntryCount() == 1) {
+        else{
             getActivity().getIntent().putExtra(Utils.INTENT_FILTER_COUNTRY_KEY, mCountries.get(position));                                                          // Put extra in activity intent.
             getFragmentManager().popBackStack();                                                                                                                                                            // pop all fragments
         }
@@ -124,5 +123,6 @@ public class CountriesFragment extends Fragment implements View.OnClickListener,
             InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(viewFocus.getWindowToken(), 0);
         }
+        getFragmentManager().popBackStack();
     }
 }
