@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.example.stoycho.phonebook.models.CountryModel;
 import com.example.stoycho.phonebook.models.HistoryModel;
+import com.example.stoycho.phonebook.models.UserModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,17 +46,27 @@ public class HistoryDatabaseComunication extends Database {
         return id;
     }
 
-    public List<HistoryModel> selectAllHistory()
+    public List<HistoryModel> selectAllHistory(String searchByName)
     {
-        String query = "SELECT * FROM " + HISTORY_TABLE_NAME;
+        String query = "SELECT history." + COLUMN_HISTORY_ID + ",history." + COLUMN_HISTORY_DATE + ",history." + COLUMN_USER_ID_FORIGN_KEY + " FROM " + HISTORY_TABLE_NAME + " history";
+
+        if(searchByName != null && !searchByName.equalsIgnoreCase(""))
+            query += " JOIN " + USERS_TABLE_NAME + " users " + " ON history." + COLUMN_USER_ID_FORIGN_KEY + " = users." + COLUMN_USER_ID
+                    + " WHERE users." + COLUMN_FIRST_NAME + " LIKE '" + searchByName + "%'";
 
         List<HistoryModel>     users    = new ArrayList<>();
+
+        select(query,users);
+        return users;
+    }
+
+    private void select(String query, List<HistoryModel> users)
+    {
         SQLiteDatabase database = getWritableDatabase();
         Cursor cursor   = database.rawQuery(query, null);
         if (cursor.moveToFirst()) {
             do {
                 HistoryModel historyModel = new HistoryModel();
-                CountryModel country = new CountryModel();
 
                 historyModel.setmHistoryId(cursor.getInt(cursor.getColumnIndex(COLUMN_HISTORY_ID)));
                 historyModel.setmDate(cursor.getString(cursor.getColumnIndex(COLUMN_HISTORY_DATE)));
@@ -67,8 +78,6 @@ public class HistoryDatabaseComunication extends Database {
         }
         cursor.close();
         database.close();
-
-        return users;
     }
 
 }

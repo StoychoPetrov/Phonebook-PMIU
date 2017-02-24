@@ -3,13 +3,14 @@
     xmlns:android           ="http://schemas.android.com/apk/res/android"
     android:orientation     ="vertical"
     android:layout_width    ="match_parent"
-    android:layout_height   ="match_parent">
+    android:layout_height   ="wrap_content"
+    android:background      ="@drawable/card_background">
 
     <RelativeLayout
         android:layout_width    ="match_parent"
         android:layout_height   ="70dp"
-        android:layout_margin   ="5dp"
-        android:background      ="@drawable/card_background">
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp">
 
         <ImageView
             android:id                      ="@+id/image"
@@ -20,9 +21,10 @@
             android:layout_marginRight      ="15dp"
             android:contentDescription      ="@null"/>
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width            ="wrap_content"
             android:layout_height           ="wrap_content"
+            android:orientation             ="vertical"
             android:layout_toRightOf        ="@+id/image"
             android:layout_toLeftOf         ="@+id/phone_icon"
             android:layout_centerVertical   ="true">
@@ -35,10 +37,9 @@
             <TextView
                 android:id                  ="@+id/date"
                 android:layout_width        ="wrap_content"
-                android:layout_height       ="wrap_content"
-                android:layout_below        ="@id/phone_number" />
+                android:layout_height       ="wrap_content" />
 
-        </RelativeLayout>
+        </LinearLayout>
 
         <ImageView
             android:id                      ="@+id/phone_icon"

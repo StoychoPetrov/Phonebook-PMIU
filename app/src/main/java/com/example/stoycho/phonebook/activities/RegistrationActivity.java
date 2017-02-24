@@ -15,10 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.stoycho.phonebook.R;
-import com.example.stoycho.phonebook.activities.BaseActivity;
 import com.example.stoycho.phonebook.database.UsersAndCountruesDatabaseComunication;
 import com.example.stoycho.phonebook.database.UsersDatabaseCommunication;
-import com.example.stoycho.phonebook.fragments.CountriesFragment;
 import com.example.stoycho.phonebook.models.CountryModel;
 import com.example.stoycho.phonebook.models.UserModel;
 import com.example.stoycho.phonebook.utils.Utils;
@@ -42,7 +40,7 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
     private RadioButton mFemaleRadioBtn;
     private Button      mAddBtn;
     private Button      mDelete;
-    private int         mCountryEdbId;
+    private int         mCountryId;
     private String      mPhoneCode;
     private boolean     mHasEmailError;
     private boolean     mHasPhoneError;
@@ -50,7 +48,7 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_registration);
+        setContentView(R.layout.activity_registration);
         
         initUI();
         setListeners();
@@ -97,7 +95,13 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
             CountryModel    country     = getIntent().getParcelableExtra(Utils.BUNDLE_COUNTRY_KEY);
             UserModel       user        = getIntent().getParcelableExtra(Utils.BUNDLE_USER_KEY);
 
-            if(user != null && country != null) {                                               // if user is not null, set user information in boxes.
+            if(user != null && country != null) {       // if user is not null, set user information in boxes.
+
+                setFocusOfEditText(mFirstNameEdb,mFirstNameTxt);
+                setFocusOfEditText(mLastNameEdb,mLastNameTxt);
+                setFocusOfEditText(mEmailEdb,mEmailTxt);
+                setFocusOfEditText(mPhoneNumberEdb,mPhoneTxt);
+
                 mFirstNameEdb.setText(user.getFirstName());
                 mLastNameEdb.setText(user.getLastName());
                 mEmailEdb.setText(user.getEmail());
@@ -106,7 +110,7 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
 
                 mPhoneCode      = country.getCallingCode();
                 String code     = mPhoneCode + " ";
-                mCountryEdbId   = country.getId();
+                mCountryId   = country.getId();
 
                 if(mPhoneCode != null)
                 {
@@ -222,7 +226,7 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
     {
         UsersDatabaseCommunication usersDatabaseCommunication = UsersDatabaseCommunication.getInstance(this);
 
-        UserModel user                                               = new UserModel(mFirstNameEdb.getText().toString(),mLastNameEdb.getText().toString(),mCountryEdbId,mEmailEdb.getText().toString(),
+        UserModel user                                               = new UserModel(mFirstNameEdb.getText().toString(),mLastNameEdb.getText().toString(),mCountryId,mEmailEdb.getText().toString(),
                                                                         mPhoneNumberEdb.getText().toString(),mMaleRadioBtn.isChecked() ? getString(R.string.male):getString(R.string.female),0);
         CountryModel country                                         = new CountryModel(mCountryEdb.getText().toString(),mPhoneCode);
         UserModel parcedUser                                         = getIntent().getParcelableExtra(Utils.BUNDLE_USER_KEY);
@@ -289,7 +293,7 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
     {
         UsersDatabaseCommunication usersDatabaseCommunication = UsersDatabaseCommunication.getInstance(this);
 
-        UserModel user = new UserModel(mFirstNameEdb.getText().toString(),mLastNameEdb.getText().toString(),mCountryEdbId,mEmailEdb.getText().toString()
+        UserModel user = new UserModel(mFirstNameEdb.getText().toString(),mLastNameEdb.getText().toString(),mCountryId,mEmailEdb.getText().toString()
                 ,mPhoneNumberEdb.getText().toString(),mMaleRadioBtn.isChecked() ? getString(R.string.male):getString(R.string.female),0);
         CountryModel country = new CountryModel(mCountryEdb.getText().toString(),mPhoneCode);
         long id = usersDatabaseCommunication.saveInDatabase(user);                                                      // Trying to save the new contact. If the query is successed, the id is different from -1. If it is equal to -1, there is error with query.
@@ -314,22 +318,8 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
             imm.hideSoftInputFromWindow(viewFocus.getWindowToken(), 0);
         }
 
-        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_down,0,0,R.anim.slide_up)
-                .add(R.id.main_layout,new CountriesFragment(), Utils.COIUNTRIES_FRAGMENT_TAG).addToBackStack(Utils.COUNTRY_BACKSTACK_NAME).commit();
-    }
-
-    public void setSelectedCountry(CountryModel country)
-    {
-        mCountryEdb.setText(country.getCountryName());
-        mPhoneCode = country.getCallingCode();
-        String code = mPhoneCode + " ";
-        mCallingCodeTxt.setVisibility(View.VISIBLE);
-        if(mPhoneCode != null) {
-            mCallingCodeTxt.setText(code);
-        }
-        else
-            mCallingCodeTxt.setVisibility(View.GONE);
-        mCountryEdbId = country.getId();
+        Intent countriesActivity = new Intent(this,CountriesActivity.class);
+        startActivityForResult(countriesActivity,Utils.COUNTRY_REQUEST_CODE);
     }
 
     @Override
@@ -391,5 +381,19 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
         }
         else
             mHasEmailError = false;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK && requestCode == Utils.COUNTRY_REQUEST_CODE)
+        {
+            CountryModel countryModel = data.getExtras().getParcelable(Utils.BUNDLE_COUNTRY_KEY);
+            if(countryModel != null) {
+                mCountryId  = countryModel.getId();
+                mPhoneCode  = countryModel.getCallingCode();
+                mCountryEdb.setText(countryModel.getCountryName());
+            }
+        }
     }
 }

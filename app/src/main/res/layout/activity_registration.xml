@@ -17,12 +17,10 @@
             android:layout_width            ="match_parent"
             android:layout_height           ="wrap_content"
             android:layout_centerVertical   ="true"
-            android:layout_toLeftOf         ="@+id/filter_button"
-            android:layout_toStartOf        ="@id/filter_button"
             android:textSize                ="25sp"
             android:textStyle               ="bold"
             android:textColor               ="@android:color/white"
-            android:text                    ="@string/contacts"
+            android:text                    ="@string/add_contact"
             android:paddingLeft             ="10dp"
             android:paddingRight            ="10dp" />
 
@@ -31,42 +29,12 @@
             android:id                      ="@+id/search"
             android:layout_width            ="match_parent"
             android:layout_height           ="50dp"
-            android:layout_toLeftOf         ="@+id/filter_button"
             android:paddingLeft             ="10dp"
             android:paddingRight            ="10dp"
             android:textColorHint           ="@android:color/darker_gray"
             android:inputType               ="text"
             android:hint                    ="@string/search"
             android:visibility              ="invisible"/>
-
-
-        <ImageButton
-            android:id                          ="@+id/search_button"
-            android:layout_width                ="wrap_content"
-            android:layout_height               ="match_parent"
-            android:layout_alignParentRight     ="true"
-            android:layout_alignParentEnd       ="true"
-            android:layout_centerVertical       ="true"
-            android:src                         ="@android:drawable/ic_menu_search"
-            android:paddingRight                ="10dp"
-            android:paddingLeft                 ="10dp"
-            android:background                  ="@android:color/transparent"
-            android:contentDescription          ="@null"/>
-
-        <ImageButton
-            android:id                          ="@+id/close_button"
-            android:layout_width                ="wrap_content"
-            android:layout_height               ="match_parent"
-            android:layout_alignParentRight     ="true"
-            android:layout_alignParentEnd       ="true"
-            android:layout_centerVertical       ="true"
-            android:src                         ="@android:drawable/ic_menu_close_clear_cancel"
-            android:paddingRight                ="10dp"
-            android:paddingLeft                 ="10dp"
-            android:background                  ="@android:color/transparent"
-            android:contentDescription          ="@null"
-            android:visibility="invisible"/>
-
 
     </RelativeLayout>
 
@@ -155,26 +123,16 @@
 
                 <LinearLayout
                     android:layout_width        ="match_parent"
-                    android:layout_height       ="wrap_content"
-                    android:orientation         ="horizontal">
-
-                    <TextView
-                        android:layout_width    ="0dp"
-                        android:layout_height   ="wrap_content"
-                        android:layout_gravity  ="center_vertical"
-                        android:layout_weight   ="0.5"
-                        android:text            ="@string/info_country"
-                        android:textColor       ="@android:color/black"
-                        android:textSize        ="18sp" />
+                    android:layout_height       ="70dp"
+                    android:orientation         ="horizontal"
+                    android:gravity             ="center">
 
                     <EditText
                         android:id              ="@+id/country"
-                        android:layout_width    ="0dp"
+                        android:layout_width    ="match_parent"
                         android:layout_height   ="40dp"
-                        android:layout_weight   ="1"
-                        android:textColorHint   ="@android:color/darker_gray"
-                        android:paddingLeft     ="10dp"
-                        android:paddingRight    ="10dp"
+                        android:textColorHint   ="@android:color/black"
+                        android:hint            ="@string/country"
                         android:lines           ="1"
                         android:focusable       ="false"
                         android:drawableRight   ="@mipmap/ic_keyboard_arrow_down_black_24dp"
@@ -306,10 +264,10 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:text                    ="@string/save"
-            android:textColor               ="@android:color/white"
+            android:textColor               ="@color/button_text_selector"
             android:layout_marginRight      ="10dp"
             android:layout_marginBottom     ="10dp"
-            android:background              ="@color/colorPrimary" />
+            android:background              ="@drawable/button_selector" />
 
         <Button
             android:id                      ="@+id/delete"
@@ -320,10 +278,10 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft  ="true"
             android:text                    ="@string/delete"
-            android:textColor               ="@android:color/white"
+            android:textColor               ="@color/button_text_selector"
             android:layout_marginLeft       ="10dp"
             android:layout_marginBottom     ="10dp"
-            android:background              ="@color/colorPrimary"
+            android:background              ="@drawable/button_selector"
             android:visibility              ="invisible"/>
 
     </RelativeLayout>

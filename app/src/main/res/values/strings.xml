@@ -44,6 +44,7 @@
     <string name="empty_box">There is empty box !</string>
     <string name="delete">delete</string>
     <string name="edit">edit</string>
+    <string name="add_contact">Add contact</string>
 
     <!-- Contact information -->
     <string name="info_first_name">First name:</string>

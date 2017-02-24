@@ -31,5 +31,8 @@ public class Utils {
     public final static String JSON_COUNTRY_NAME_KEY                    = "name";
     public final static String JSON_COUNTRY_CALLING_CODE_KEY            = "callingCodes";
 
+    //RESULT CODES
+    public final static int     COUNTRY_REQUEST_CODE                     = 1;
+
 
 }

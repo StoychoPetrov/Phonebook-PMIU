@@ -23,6 +23,10 @@ import java.util.List;
     private static final int HISTORY_FRAGMENT_INDEX     = 1;
     private static final int CONTACTS_FRAGMENT_INDEX    = 2;
 
+    private FavouritesFragment  mFavouritesFragment;
+    private HistoryFragment     mHistoryFragment;
+    private ContactsFragment    mContactsFragment;
+
     private String[]     mTabsTitles;
 
     public ViewPagerAdapter(FragmentManager fm, Context context) {
@@ -35,11 +39,14 @@ import java.util.List;
         switch (position)
         {
             case FAVOURITES_FRAGMENT_INDEX:
-                return new FavouritesFragment();
+                mFavouritesFragment =  new FavouritesFragment();
+                return mFavouritesFragment;
             case HISTORY_FRAGMENT_INDEX:
-                return new HistoryFragment();
+                mHistoryFragment    = new HistoryFragment();
+                return mHistoryFragment;
             case CONTACTS_FRAGMENT_INDEX:
-                return new ContactsFragment();
+                mContactsFragment   = new ContactsFragment();
+                return mContactsFragment;
         }
         return null;
     }
@@ -52,5 +59,17 @@ import java.util.List;
     @Override
     public int getCount() {
         return mTabsTitles.length;
+    }
+
+    public FavouritesFragment getmFavouritesFragment() {
+        return mFavouritesFragment;
+    }
+
+    public HistoryFragment getmHistoryFragment() {
+        return mHistoryFragment;
+    }
+
+    public ContactsFragment getmContactsFragment() {
+        return mContactsFragment;
     }
 }

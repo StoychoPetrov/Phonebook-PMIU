@@ -63,8 +63,10 @@ public class UsersAndCountruesDatabaseComunication extends Database {
         if(orderByName)
             query += " ORDER BY " + COLUMN_FIRST_NAME;
 
-        if(mOrderByCallingCount)
+        if(mOrderByCallingCount) {
             query += " ORDER BY " + COLUMN_CALLS_COUNT + " DESC ";
+            mOrderByCallingCount = false;
+        }
 
         List<UserModel> users = new ArrayList<>();
 

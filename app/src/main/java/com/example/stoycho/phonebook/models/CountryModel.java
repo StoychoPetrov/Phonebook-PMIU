@@ -16,9 +16,6 @@ public class CountryModel implements Parcelable {
     private String  mCountryName;
     private String  mCallingCode;
 
-    private final static String CALLING_CODE_JSON_KEY = "callingCodes";
-    private final static String NAME_JSON_KEY         = "name";
-
     public CountryModel() {}
 
     public CountryModel(String countryName, String callingCode) {
@@ -57,27 +54,6 @@ public class CountryModel implements Parcelable {
         mCallingCode    = in.readString();
     }
 
-    private void parcefromJson(JSONObject country) throws JSONException {
-        JSONArray countryCodes  = country.getJSONArray(CALLING_CODE_JSON_KEY);
-        mCountryName            = country.getString(NAME_JSON_KEY);
-        mCallingCode            = countryCodes.length() > 0 ? countryCodes.getString(0) : null;
-    }
-
-    public static List<CountryModel> parceCountriesFromJson(String countriesForParce) {
-        List<CountryModel> countries = new ArrayList<>();
-        try {
-            JSONArray countriesJson = new JSONArray(countriesForParce);
-            for (int i = 0; i < countriesJson.length(); i++) {
-                CountryModel country = new CountryModel();
-                country.parcefromJson(countriesJson.getJSONObject(i));
-                countries.add(country);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return countries;
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -93,7 +69,7 @@ public class CountryModel implements Parcelable {
     public static final Parcelable.Creator CREATOR = new ClassLoaderCreator() {
         @Override
         public Object createFromParcel(Parcel parcel, ClassLoader classLoader) {
-            return null;
+            return new CountryModel(parcel);
         }
 
         @Override

@@ -139,7 +139,7 @@ public class UserModel implements Parcelable{
     public static final Parcelable.Creator CREATOR = new ClassLoaderCreator() {
         @Override
         public Object createFromParcel(Parcel parcel, ClassLoader classLoader) {
-            return null;
+            return new UserModel(parcel);
         }
 
         @Override

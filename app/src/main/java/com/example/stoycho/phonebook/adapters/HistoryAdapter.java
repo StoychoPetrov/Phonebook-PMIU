@@ -6,16 +6,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.stoycho.phonebook.R;
-import com.example.stoycho.phonebook.database.HistoryDatabaseComunication;
 import com.example.stoycho.phonebook.database.UsersAndCountruesDatabaseComunication;
 import com.example.stoycho.phonebook.models.CountryModel;
 import com.example.stoycho.phonebook.models.HistoryModel;
 import com.example.stoycho.phonebook.models.UserModel;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -57,11 +59,42 @@ public class HistoryAdapter extends ArrayAdapter<HistoryModel> {
 
         holder.mContactName.setText(userModel.getFirstName());
 
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat simpleDateFormat   = new SimpleDateFormat("E MMM dd HH:MM");
+        SimpleDateFormat hourFormat         = new SimpleDateFormat("HH:MM");
+
+        try {
+            Date date    = simpleDateFormat.parse(historyModel.getmDate());
+            Calendar phoneCallDate = Calendar.getInstance();
+            phoneCallDate.setTime(date);
+
+            if(phoneCallDate.compareTo(calendar) == 0)
+                holder.mDate.setText(hourFormat.format(date));
+            else if(phoneCallDate.before(calendar))
+                holder.mDate.setText(hourFormat.format(date));
+            else
+                holder.mDate.setText("Tomorrow");
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         return convertView;
+    }
+
+    @Override
+    public int getCount()
+    {
+        return mHistoryList.size();
     }
 
     private static class ViewHolder {
         public TextView        mContactName;
         public TextView        mDate;
+    }
+
+    public void setmHistoryList(List<HistoryModel> histories)
+    {
+        mHistoryList    =   histories;
     }
 }

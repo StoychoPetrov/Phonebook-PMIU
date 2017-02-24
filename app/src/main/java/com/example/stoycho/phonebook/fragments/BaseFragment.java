@@ -41,39 +41,6 @@ public class BaseFragment extends Fragment {
         checkPermissions();
     }
 
-    public void setFocusOfEditText(EditText view,final TextView textView) {
-        if (view.getText().toString().equals("")) {
-            ValueAnimator translationX = ObjectAnimator.ofFloat(textView, "translationY", textView.getTranslationY(), textView.getTranslationY() - 50);
-            ValueAnimator scaleX = ObjectAnimator.ofFloat(textView, "scaleX", 1f, 0.8f);
-            ValueAnimator scaleY = ObjectAnimator.ofFloat(textView, "scaleY", 1f, 0.8f);
-            textView.setPivotX(0);
-            textView.setPivotY(0);
-
-            AnimatorSet animatorSet = new AnimatorSet();
-            animatorSet.playTogether(translationX, scaleX, scaleY);
-            animatorSet.start();
-
-            textView.setTextColor(ContextCompat.getColor(getActivity(), android.R.color.darker_gray));
-        }
-    }
-
-    public void removeFocus(EditText view,TextView textView)
-    {
-        if(view.getText().toString().equals("")) {
-            ValueAnimator translationY = ObjectAnimator.ofFloat(textView, "translationY", textView.getTranslationY(), textView.getTranslationY() + 50);
-            ValueAnimator scaleX = ObjectAnimator.ofFloat(textView, "scaleX", 0.8f, 1f);
-            ValueAnimator scaleY = ObjectAnimator.ofFloat(textView, "scaleY", 0.8f, 1f);
-            textView.setPivotX(0);
-            textView.setPivotY(0);
-
-            AnimatorSet animatorSet = new AnimatorSet();
-            animatorSet.playTogether(translationY, scaleX, scaleY);
-            animatorSet.start();
-
-            textView.setTextColor(ContextCompat.getColor(getActivity(),android.R.color.black));
-        }
-    }
-
     public void callToNumber(String callingCode,UserModel userModel)
     {
         String number                                           = "+" + callingCode + userModel.getPhoneNumber();

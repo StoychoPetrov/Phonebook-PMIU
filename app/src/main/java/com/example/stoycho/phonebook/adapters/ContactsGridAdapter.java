@@ -6,10 +6,11 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.example.stoycho.phonebook.R;
+import com.example.stoycho.phonebook.models.CountryModel;
 import com.example.stoycho.phonebook.models.UserModel;
 
 import java.util.List;
@@ -19,14 +20,14 @@ import java.util.List;
  * Created by stoycho.petrov on 17/02/2017.
  */
 
-public class ContactsGridAdapter extends BaseAdapter{
+public class ContactsGridAdapter extends ArrayAdapter<UserModel>{
 
     private List<UserModel> mContacts;
     private LayoutInflater  mLayoutInflater;
-    private String[] mColors;
+    private String[]        mColors;
 
-    public ContactsGridAdapter(Context context, List<UserModel> contacts)
-    {
+    public ContactsGridAdapter(Context context, List<UserModel> contacts) {
+        super(context, R.layout.item_grid_contact, contacts);
         mContacts              = contacts;
         mLayoutInflater        = ((Activity)context).getLayoutInflater();
         mColors                = context.getResources().getStringArray(R.array.favourite_colors);
@@ -38,7 +39,7 @@ public class ContactsGridAdapter extends BaseAdapter{
     }
 
     @Override
-    public Object getItem(int i) {
+    public UserModel getItem(int i) {
         return mContacts.get(i);
     }
 
@@ -88,5 +89,10 @@ public class ContactsGridAdapter extends BaseAdapter{
             index++;
         }
         return null;
+    }
+
+    public void setContactsList(List<UserModel> contacts)
+    {
+        mContacts   = contacts;
     }
 }
