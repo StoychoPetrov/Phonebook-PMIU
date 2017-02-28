@@ -77,4 +77,10 @@
 
     <string name="permission_denied_phone_call">If you want to call, you have to grant the permission !</string>
 
+    <array name="calling_states">
+        <item>Outgoing</item>
+        <item>Incomming</item>
+        <item>Missed</item>
+    </array>
+
 </resources>

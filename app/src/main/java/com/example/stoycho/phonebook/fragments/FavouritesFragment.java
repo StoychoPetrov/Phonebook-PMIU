@@ -8,7 +8,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.example.stoycho.phonebook.R;
-import com.example.stoycho.phonebook.adapters.ContactsGridAdapter;
+import com.example.stoycho.phonebook.adapters.FavouritesGridAdapter;
 import com.example.stoycho.phonebook.database.UsersAndCountruesDatabaseComunication;
 import com.example.stoycho.phonebook.models.CountryModel;
 import com.example.stoycho.phonebook.models.UserModel;
@@ -19,10 +19,10 @@ import java.util.List;
 
 public class FavouritesFragment extends BaseFragment implements GridView.OnItemClickListener {
 
-    private GridView            mGridView;
-    private ContactsGridAdapter mGridAdapter;
-    private List<UserModel>     mContacts;
-    private List<CountryModel>  mCountries;
+    private GridView                mGridView;
+    private FavouritesGridAdapter   mGridAdapter;
+    private List<UserModel>         mContacts;
+    private List<CountryModel>      mCountries;
 
     private UsersAndCountruesDatabaseComunication usersAndCountruesDatabaseComunication;
 
@@ -34,11 +34,9 @@ public class FavouritesFragment extends BaseFragment implements GridView.OnItemC
         setListeners();
 
         usersAndCountruesDatabaseComunication  = UsersAndCountruesDatabaseComunication.getInstance(getActivity());
-        usersAndCountruesDatabaseComunication.setOrderByCallingCount(true);
-        mContacts  = usersAndCountruesDatabaseComunication.selectUsersAndTheirCountries(mCountries, Utils.INVALID_ROW_INDEX,null,null,null,false);
-        usersAndCountruesDatabaseComunication.setOrderByCallingCount(false);
+        mContacts  = usersAndCountruesDatabaseComunication.selectFavurites(mCountries);
 
-        mGridAdapter = new ContactsGridAdapter(getActivity(),mContacts);
+        mGridAdapter = new FavouritesGridAdapter(getActivity(),mContacts);
         mGridView.setAdapter(mGridAdapter);
 
         return root;
@@ -62,7 +60,6 @@ public class FavouritesFragment extends BaseFragment implements GridView.OnItemC
 
     public void refreshList(String searchStirng)
     {
-        usersAndCountruesDatabaseComunication.setOrderByCallingCount(true);
         mContacts   = usersAndCountruesDatabaseComunication.selectUsersAndTheirCountries(mCountries,Utils.INVALID_ROW_INDEX,null,null,searchStirng,false);
         mGridAdapter.setContactsList(mContacts);
         mGridAdapter.notifyDataSetChanged();

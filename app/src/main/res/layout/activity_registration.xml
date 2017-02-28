@@ -123,9 +123,20 @@
 
                 <LinearLayout
                     android:layout_width        ="match_parent"
-                    android:layout_height       ="70dp"
-                    android:orientation         ="horizontal"
+                    android:layout_height       ="60dp"
+                    android:orientation         ="vertical"
                     android:gravity             ="center">
+
+                    <TextView
+                        android:id              ="@+id/country_txt"
+                        android:layout_width    ="match_parent"
+                        android:layout_height   ="wrap_content"
+                        android:text            ="@string/info_country"
+                        android:textColor       ="@android:color/darker_gray"
+                        android:textSize        ="16sp"
+                        android:paddingLeft     ="2dp"
+                        android:paddingRight    ="2dp"
+                        android:visibility      ="visible"/>
 
                     <EditText
                         android:id              ="@+id/country"

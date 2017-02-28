@@ -2,6 +2,7 @@ package com.example.stoycho.phonebook.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,74 +25,101 @@ import java.util.List;
  * Created by stoycho.petrov on 21/02/2017.
  */
 
-public class HistoryAdapter extends ArrayAdapter<HistoryModel> {
+public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
 
     private List<HistoryModel>                      mHistoryList;
-    private LayoutInflater                          mLayoutInflater;
     private UsersAndCountruesDatabaseComunication   mUsersAndCountruesDatabaseComunication;
 
-    public HistoryAdapter(Context context, int resource, List<HistoryModel> historiesList) {
-        super(context, resource, historiesList);
+    private static final int TYPE_SECTION_TITLE     = 1;
+    private static final int TYPE_SECTION_HISTORY   = 2;
 
-        mHistoryList                                = historiesList;
-        mLayoutInflater                             = ((Activity)context).getLayoutInflater();
-        mUsersAndCountruesDatabaseComunication      = UsersAndCountruesDatabaseComunication.getInstance(context);
-    }
-
-    public View getView(int position, View convertView, ViewGroup parent) {
-        if(convertView == null) {
-            convertView                                 = mLayoutInflater.inflate(R.layout.item_history, null);
-            ViewHolder viewHolder                       = new ViewHolder();
-            viewHolder.mContactName                     = (TextView) convertView.findViewById(R.id.contact_name);
-            viewHolder.mDate                            = (TextView) convertView.findViewById(R.id.date);
-
-            convertView.setTag(viewHolder);
-        }
-
-        ViewHolder holder           = (ViewHolder) convertView.getTag();
-
-        HistoryModel historyModel   = mHistoryList.get(position);
-
-        CountryModel countryModel = null;
-        UserModel    userModel;
-
-        userModel   = mUsersAndCountruesDatabaseComunication.selectUserById(historyModel.getmUserId(),countryModel);
-
-        holder.mContactName.setText(userModel.getFirstName());
-
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat simpleDateFormat   = new SimpleDateFormat("E MMM dd HH:MM");
-        SimpleDateFormat hourFormat         = new SimpleDateFormat("HH:MM");
-
-        try {
-            Date date    = simpleDateFormat.parse(historyModel.getmDate());
-            Calendar phoneCallDate = Calendar.getInstance();
-            phoneCallDate.setTime(date);
-
-            if(phoneCallDate.compareTo(calendar) == 0)
-                holder.mDate.setText(hourFormat.format(date));
-            else if(phoneCallDate.before(calendar))
-                holder.mDate.setText(hourFormat.format(date));
-            else
-                holder.mDate.setText("Tomorrow");
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return convertView;
+    public HistoryAdapter(Context context,List<HistoryModel> histories)
+    {
+        mHistoryList    = histories;
+        mUsersAndCountruesDatabaseComunication  = UsersAndCountruesDatabaseComunication.getInstance(context);
     }
 
     @Override
-    public int getCount()
-    {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = null;
+
+        if(viewType == TYPE_SECTION_TITLE)
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_history_heather,parent,false);
+        else
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_history,parent,false);
+
+
+        return new ViewHolder(view,viewType);
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+
+        HistoryModel historyModel = mHistoryList.get(position);
+
+        if(holder.mTypeId == TYPE_SECTION_TITLE)
+            holder.mHeatherTxt.setText(historyModel.getmHeather());
+        else{
+            CountryModel countryModel = null;
+            UserModel    userModel = null;
+
+            if(historyModel.getmUserId() > -1)
+                userModel   = mUsersAndCountruesDatabaseComunication.selectUserById(historyModel.getmUserId(),countryModel);
+
+            SimpleDateFormat hourFormat         = new SimpleDateFormat("HH:MM");
+
+            if(userModel != null)
+                holder.mContactName.setText(userModel.getFirstName());
+            else
+                holder.mContactName.setText(historyModel.getmNotKnownPhone());
+
+            try {
+                holder.mDate.setText(hourFormat.format(new SimpleDateFormat("EEE MMM dd hh:mm:ss 'GMT'Z yyyy").parse(historyModel.getmDate())));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            holder.mState.setText(historyModel.getmCallingState());
+        }
+    }
+
+    @Override
+    public int getItemCount() {
         return mHistoryList.size();
     }
 
-    private static class ViewHolder {
-        public TextView        mContactName;
-        public TextView        mDate;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+
+        public TextView         mContactName;
+        public TextView         mDate;
+        public TextView         mHeatherTxt;
+        public TextView         mState;
+        private int             mTypeId;
+
+        public ViewHolder(View itemView,int viewType) {
+            super(itemView);
+            if(viewType == TYPE_SECTION_TITLE) {
+                mHeatherTxt = (TextView) itemView.findViewById(R.id.heather_txt);
+                mTypeId     = TYPE_SECTION_TITLE;
+            }
+            else {
+                mContactName    = (TextView) itemView.findViewById(R.id.contact_name);
+                mDate           = (TextView) itemView.findViewById(R.id.date);
+                mState          = (TextView) itemView.findViewById(R.id.state);
+                mTypeId         = TYPE_SECTION_HISTORY;
+            }
+        }
     }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (mHistoryList.get(position).getmType() == TYPE_SECTION_TITLE) {
+            return TYPE_SECTION_TITLE;
+        }
+        else
+            return TYPE_SECTION_HISTORY;
+    }
+
 
     public void setmHistoryList(List<HistoryModel> histories)
     {

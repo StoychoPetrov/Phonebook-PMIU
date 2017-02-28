@@ -2,10 +2,12 @@ package com.example.stoycho.phonebook.activities;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.telecom.Call;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MotionEvent;
@@ -24,6 +26,7 @@ import android.widget.TextView;
 import com.example.stoycho.phonebook.R;
 import com.example.stoycho.phonebook.adapters.ViewPagerAdapter;
 import com.example.stoycho.phonebook.communicationClasses.HttpRequest;
+import com.example.stoycho.phonebook.database.CallingStatesDatabaseCommunication;
 import com.example.stoycho.phonebook.database.CountriesDatabaseCommunication;
 import com.example.stoycho.phonebook.models.CountryModel;
 import com.example.stoycho.phonebook.utils.Utils;
@@ -36,7 +39,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 
-public class MainActivity extends FragmentActivity implements View.OnClickListener,View.OnTouchListener,TextWatcher,RadioGroup.OnCheckedChangeListener,ViewPager.OnPageChangeListener{
+public class MainActivity extends FragmentActivity implements View.OnClickListener,TextWatcher,RadioGroup.OnCheckedChangeListener,ViewPager.OnPageChangeListener{
 
     private ViewPager           mViewPager;
     private ViewPagerAdapter    mViewPagerAdapter;
@@ -46,25 +49,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private ImageButton         mSearchButton;
     private ImageButton         mCloseButton;
     private TextView            mTitleTxt;
-    private RelativeLayout      mFilterLayout;
-    private int                 mFilterLayoutStartBottomMargin;
 
-    private EditText            mCountryEdb;
     private EditText            mSearchCountryEdb;
     private RadioGroup          mGenderRadioGroup;
-    private Button              mResetButton;
-    private Button              mApplyButton;
-    private CountryModel        mSelectedFilterCountry;
 
     private CountriesDatabaseCommunication  mCountriesDatabaseComunications;
 
     private int                 mFirstTouchPositionY;
-    private boolean             mStartAnimation;
     private int                 mFilterCurrentTopMargin;
     private int                 mViewPagerPosition = 0;
-
-    private final static String ALL_COUNTRIES_ARE_SELECTED              = "all_selected";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,51 +79,43 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         mTabLayout.setupWithViewPager(mViewPager);
 
-        hideFilterLayout();
+        insertCallingStatesInDatabase();
     }
 
     private void initUI()
     {
         mViewPager          = (ViewPager)       findViewById(R.id.view_pager);
         mTabLayout          = (TabLayout)       findViewById(R.id.tabs_layout);
-        mFilterLayout       = (RelativeLayout)  findViewById(R.id.filter_layout);
         mBar                = (RelativeLayout)  findViewById(R.id.bar);
         mTitleTxt           = (TextView)        findViewById(R.id.title);
         mSearchButton       = (ImageButton)     findViewById(R.id.search_button);
         mCloseButton        = (ImageButton)     findViewById(R.id.close_button);
-        mCountryEdb         = (EditText)        findViewById(R.id.country_editbox);
         mSearchCountryEdb   = (EditText)        findViewById(R.id.search);
         mGenderRadioGroup   = (RadioGroup)      findViewById(R.id.gender_radio);
-        mResetButton        = (Button)          findViewById(R.id.reset_button);
-        mApplyButton        = (Button)          findViewById(R.id.apply_button);
 
         mCountriesDatabaseComunications =   CountriesDatabaseCommunication.getInstance(this);
     }
 
     private void setListeners()
     {
-        mFilterLayout.setOnTouchListener(this);
         mSearchCountryEdb.addTextChangedListener(this);
         mSearchButton.setOnClickListener(this);
-        mCountryEdb.setOnClickListener(this);
-        mApplyButton.setOnClickListener(this);
-        mResetButton.setOnClickListener(this);
         mCloseButton.setOnClickListener(this);
         mViewPager.addOnPageChangeListener(this);
-        mGenderRadioGroup.setOnCheckedChangeListener(this);
     }
 
-    private void hideFilterLayout()
-    {
-        mFilterLayout.measure(0,0);
-        mBar.measure(0,0);
-        mTabLayout.measure(0,0);
+    private void insertCallingStatesInDatabase() {
 
-        RelativeLayout.LayoutParams filterLayoutParams = (RelativeLayout.LayoutParams) mFilterLayout.getLayoutParams();
+        CallingStatesDatabaseCommunication callingStatesDatabaseCommunication = CallingStatesDatabaseCommunication.getInstance(this);
 
-        mFilterLayoutStartBottomMargin         = filterLayoutParams.bottomMargin;
-        filterLayoutParams.bottomMargin     = getResources().getDisplayMetrics().heightPixels;
-        mFilterLayout.setLayoutParams(filterLayoutParams);
+        if(callingStatesDatabaseCommunication.getCountOfStates() == 0) {
+
+            String[] states = getResources().getStringArray(R.array.calling_states);
+
+            for(String state : states){
+                callingStatesDatabaseCommunication.insertCallingState(state);
+            }
+        }
     }
 
     private void loadCountries() throws MalformedURLException {
@@ -176,26 +161,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
     }
 
-    private void animateFilter(float bottomMargin, float increaseHeight)
-    {
-        ValueAnimator valueAnimator = ValueAnimator.ofFloat(bottomMargin,increaseHeight);
-
-        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                ((RelativeLayout.LayoutParams)mFilterLayout.getLayoutParams()).bottomMargin = ((Float) valueAnimator.getAnimatedValue()).intValue();
-                mFilterLayout.requestLayout();
-            }
-        });
-
-        valueAnimator.start();
-
-//        if(increaseHeight == mFilterLayoutStartTopMargin)
-//            mNewContactButton.setVisibility(View.GONE);
-//        else
-//            mNewContactButton.setVisibility(View.VISIBLE);
-    }
-
     private void replaceElementsWithFade(final View visibleView, final View goneView)
     {
 
@@ -221,7 +186,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             @Override
             public void onAnimationEnd(Animation animation) {
                 goneView.setVisibility(View.VISIBLE);
-                mStartAnimation = false;
 
                 if(goneView.getId() == R.id.search) {
                     mSearchCountryEdb.requestFocus();
@@ -261,45 +225,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         });
     }
 
-    private void applyFilter()
-    {
-
-
-    }
-
-    private void resetFilter()
-    {
-
-    }
-
-    private void setFilterCountry(CountryModel country)                                     //The contacts are selected by country
-    {
-        mSelectedFilterCountry  = country;
-
-        if(country.getCountryName() == null) {
-            mCountryEdb.setText(getString(R.string.all));
-            mSelectedFilterCountry = null;
-        }
-        else
-            mCountryEdb.setText(country.getCountryName());
-    }
-
-    private void onSelectCountry()                                                      //start CountriesFragment
-    {
-//        CountriesFragment countriesFragment = new CountriesFragment();
-//        Bundle            bundle            = new Bundle();
-//
-//        bundle.putBoolean(ALL_COUNTRIES_ARE_SELECTED,true);
-//        countriesFragment.setArguments(bundle);
-//
-//        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_down,0,0,R.anim.slide_up)
-//                .add(R.id.replace_layout,countriesFragment, Utils.COIUNTRIES_FRAGMENT_TAG).addToBackStack(Utils.COUNTRY_BACKSTACK_NAME).commit();
-    }
-
     @Override
     public void onClick(View view) {
-
-        RelativeLayout.LayoutParams filterParams = (RelativeLayout.LayoutParams) mFilterLayout.getLayoutParams();
 
         switch (view.getId())
         {
@@ -307,55 +234,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 replaceElementsWithFade(mCloseButton,mSearchButton);
                 replaceElementsWithFade(mSearchCountryEdb, mTitleTxt);
                 break;
-            case R.id.reset_button:
-                resetFilter();
-                break;
-            case R.id.apply_button:
-                applyFilter();
-                animateFilter(filterParams.bottomMargin,getResources().getDisplayMetrics().heightPixels - mBar.getHeight());
-                break;
-            case R.id.country_editbox:
-                onSelectCountry();
-                break;
             case R.id.search_button:
                 replaceElementsWithFade(mTitleTxt, mSearchCountryEdb);
                 replaceElementsWithFade(mSearchButton,mCloseButton);
                 break;
         }
-    }
-
-    @Override
-    public boolean onTouch(View view, MotionEvent motionEvent) {
-
-        final int touchPositionY                    = (int) motionEvent.getRawY();
-
-        RelativeLayout.LayoutParams layoutParams    = (RelativeLayout.LayoutParams) view
-                .getLayoutParams();
-
-        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK)
-        {
-            case MotionEvent.ACTION_DOWN:
-                RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
-                mFirstTouchPositionY = touchPositionY - lParams.topMargin;
-                break;
-            case MotionEvent.ACTION_MOVE:
-                if(mFirstTouchPositionY - touchPositionY > 0) {
-                    layoutParams.bottomMargin = mFirstTouchPositionY - touchPositionY;
-                    layoutParams.topMargin = touchPositionY - mFirstTouchPositionY;
-                    mFilterCurrentTopMargin = mFirstTouchPositionY - touchPositionY;
-                    view.setLayoutParams(layoutParams);
-                }
-                break;
-            case MotionEvent.ACTION_UP:
-                if (mFilterCurrentTopMargin > mFilterLayout.getHeight() / 3)
-                    animateFilter(mFilterCurrentTopMargin, mFilterLayout.getHeight());
-                else {
-                    animateFilter(mFilterCurrentTopMargin, mFilterLayoutStartBottomMargin);
-                }
-                break;
-        }
-        view.invalidate();
-        return true;
     }
 
     @Override
@@ -414,7 +297,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public void onPageScrollStateChanged(int state) {
+    }
 
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK)
+        {
+            if(requestCode == Utils.ADD_CONTACT_REQUEST_CODE  || requestCode == Utils.EDIT_CONTACT_REQUEST_CODE) {
+                mViewPagerAdapter.getmContactsFragment().loadUsers();
+            }
+        }
     }
 }

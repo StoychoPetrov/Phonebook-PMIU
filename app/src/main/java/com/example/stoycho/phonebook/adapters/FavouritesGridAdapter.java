@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.example.stoycho.phonebook.R;
 import com.example.stoycho.phonebook.models.CountryModel;
 import com.example.stoycho.phonebook.models.UserModel;
+import com.example.stoycho.phonebook.utils.Utils;
 
 import java.util.List;
 
@@ -20,17 +21,17 @@ import java.util.List;
  * Created by stoycho.petrov on 17/02/2017.
  */
 
-public class ContactsGridAdapter extends ArrayAdapter<UserModel>{
+public class FavouritesGridAdapter extends ArrayAdapter<UserModel>{
 
     private List<UserModel> mContacts;
     private LayoutInflater  mLayoutInflater;
-    private String[]        mColors;
+    private Context         mContext;
 
-    public ContactsGridAdapter(Context context, List<UserModel> contacts) {
+    public FavouritesGridAdapter(Context context, List<UserModel> contacts) {
         super(context, R.layout.item_grid_contact, contacts);
         mContacts              = contacts;
+        mContext               = context;
         mLayoutInflater        = ((Activity)context).getLayoutInflater();
-        mColors                = context.getResources().getStringArray(R.array.favourite_colors);
     }
 
     @Override
@@ -69,7 +70,7 @@ public class ContactsGridAdapter extends ArrayAdapter<UserModel>{
         holder.mNamePrefixTxt.setText(namePrefix);
         holder.mNameTxt.setText(contact.getFirstName());
 
-        view.setBackgroundColor(Color.parseColor(getColor(namePrefix)));
+        view.setBackgroundColor(Color.parseColor(Utils.getColor(mContext,namePrefix)));
         return view;
     }
 
@@ -77,18 +78,6 @@ public class ContactsGridAdapter extends ArrayAdapter<UserModel>{
 
         private TextView mNamePrefixTxt;
         private TextView mNameTxt;
-    }
-
-    private String getColor(String letter)
-    {
-        int index = 0;
-        for (char i = 'A'; i <= 'Z'; i ++)
-        {
-            if(letter.equalsIgnoreCase(String.valueOf(i)))
-                return mColors[index];
-            index++;
-        }
-        return null;
     }
 
     public void setContactsList(List<UserModel> contacts)

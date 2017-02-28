@@ -2,8 +2,10 @@ package com.example.stoycho.phonebook.database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.example.stoycho.phonebook.models.HistoryModel;
 import com.example.stoycho.phonebook.models.UserModel;
 
 /**
@@ -73,6 +75,7 @@ public class UsersDatabaseCommunication extends Database {
         SQLiteDatabase database = getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_IMAGE, imagePath);
+
         int result = database.update(USERS_TABLE_NAME,values,COLUMN_USER_ID + "=?",new String[]{String.valueOf(userId)});
         database.close();
 
@@ -88,5 +91,28 @@ public class UsersDatabaseCommunication extends Database {
         database.close();
 
         return result > 0;
+    }
+
+    public UserModel getUserIdByPhone(String phoneNumber, int callingCount) {
+
+        UserModel userModel = new UserModel();
+        String query = "SELECT " + COLUMN_USER_ID + "," + COLUMN_CALLS_COUNT + ", " + COLUMN_FIRST_NAME + " FROM " + USERS_TABLE_NAME
+                + " WHERE " + COLUMN_PHONE_NUMBER + " = " + phoneNumber;
+
+        SQLiteDatabase database = getWritableDatabase();
+        Cursor cursor   = database.rawQuery(query, null);
+
+        int userId = -1;
+
+        if (cursor.moveToFirst()) {
+            userModel.setId(cursor.getInt(cursor.getColumnIndex(COLUMN_USER_ID)));
+            userModel.setmCallsCount(cursor.getInt(cursor.getColumnIndex(COLUMN_CALLS_COUNT)));
+            userModel.setFirstName(cursor.getString(cursor.getColumnIndex(COLUMN_FIRST_NAME)));
+        }
+
+        cursor.close();
+        database.close();
+
+        return userModel;
     }
 }

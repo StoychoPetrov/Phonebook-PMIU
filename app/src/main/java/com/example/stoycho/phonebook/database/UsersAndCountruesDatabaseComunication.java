@@ -20,53 +20,51 @@ public class UsersAndCountruesDatabaseComunication extends Database {
     public final    static int                                      WITHOUT_COUNTRY_ID   = -1;
     private         static UsersAndCountruesDatabaseComunication    instance             = null;
 
-    private boolean mOrderByCallingCount;
-
     private UsersAndCountruesDatabaseComunication(Context context) {
         super(context);
     }
 
-    public List<UserModel> selectUsersAndTheirCountries(List<CountryModel> countries, int countryId, String gender, String phone, String filterByName,boolean orderByName)
-    {
+    public List<UserModel> selectUsersAndTheirCountries(List<CountryModel> countries, int countryId, String gender, String phone, String filterByName,boolean orderByName) {
 
         boolean hasWhereClause = false;
 
         String query = "SELECT * "
-                +  "FROM " + USERS_TABLE_NAME + " users " + "INNER JOIN " + COUNTRIES_TABLE_NAME + " countries "
-                +  "ON " + "users." + COLUMN_COUNTRY_ID_FK + " = countries." + COLUMN_COUNTRY_ID;
-        if(countryId >= 0 && gender == null) {
+                + "FROM " + USERS_TABLE_NAME + " users " + "INNER JOIN " + COUNTRIES_TABLE_NAME + " countries "
+                + "ON " + "users." + COLUMN_COUNTRY_ID_FK + " = countries." + COLUMN_COUNTRY_ID;
+        if (countryId >= 0 && gender == null) {
             query += " WHERE users." + COLUMN_COUNTRY_ID_FK + " = " + countryId;
             hasWhereClause = true;
-        }
-        else if(countryId < 0 && gender != null) {
+        } else if (countryId < 0 && gender != null) {
             query += " WHERE users." + COLUMN_GENDER + " = '" + gender + "'";
             hasWhereClause = true;
-        }
-        else if(countryId >=0 && gender != null) {
+        } else if (countryId >= 0 && gender != null) {
             query += " WHERE users." + COLUMN_COUNTRY_ID_FK + " = " + countryId + " AND users." + COLUMN_GENDER + " = '" + gender + "'";
             hasWhereClause = true;
-        }
-        else if(phone != null) {
+        } else if (phone != null) {
             query += " WHERE users." + COLUMN_PHONE_NUMBER + " = " + phone;
             hasWhereClause = true;
         }
 
-        if(filterByName != null && !filterByName.equals("") && hasWhereClause)
-        {
+        if (filterByName != null && !filterByName.equals("") && hasWhereClause) {
             query += " AND users." + COLUMN_FIRST_NAME + " LIKE '" + filterByName + "%'";
-        }
-        else if(filterByName != null && !filterByName.equals(""))
-        {
+        } else if (filterByName != null && !filterByName.equals("")) {
             query += " WHERE users." + COLUMN_FIRST_NAME + " LIKE '" + filterByName + "%'";
         }
 
-        if(orderByName)
+        if (orderByName)
             query += " ORDER BY " + COLUMN_FIRST_NAME;
 
-        if(mOrderByCallingCount) {
-            query += " ORDER BY " + COLUMN_CALLS_COUNT + " DESC ";
-            mOrderByCallingCount = false;
-        }
+        List<UserModel> users = new ArrayList<>();
+
+        select(query,countries,users);
+
+        return users;
+    }
+
+    public List<UserModel> selectFavurites(List<CountryModel> countries){
+        String query = "SELECT * "
+                +  "FROM " + USERS_TABLE_NAME + " users " + "INNER JOIN " + COUNTRIES_TABLE_NAME + " countries "
+                +  "ON " + "users." + COLUMN_COUNTRY_ID_FK + " = countries." + COLUMN_COUNTRY_ID + " WHERE users." + COLUMN_CALLS_COUNT + " > 0 ORDER BY " + COLUMN_CALLS_COUNT + " DESC ";
 
         List<UserModel> users = new ArrayList<>();
 
@@ -130,10 +128,5 @@ public class UsersAndCountruesDatabaseComunication extends Database {
         if(instance == null)
             instance = new UsersAndCountruesDatabaseComunication(context);
         return instance;
-    }
-
-    public void setOrderByCallingCount(boolean orderByCallingCount)
-    {
-        mOrderByCallingCount = orderByCallingCount;
     }
 }

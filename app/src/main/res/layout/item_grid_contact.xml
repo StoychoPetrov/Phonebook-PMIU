@@ -15,6 +15,7 @@
             android:layout_height   ="match_parent"
             android:layout_above    ="@+id/name_txt"
             android:gravity         ="center"
+            android:textColor       ="@android:color/white"
             android:textSize        ="50sp" />
 
         <TextView
@@ -24,7 +25,8 @@
             android:layout_alignParentBottom    ="true"
             android:paddingLeft                 ="15dp"
             android:paddingRight                ="15dp"
-            android:layout_marginBottom         ="15dp"/>
+            android:layout_marginBottom         ="15dp"
+            android:textColor                   ="@android:color/white"/>
 
     </RelativeLayout>
 

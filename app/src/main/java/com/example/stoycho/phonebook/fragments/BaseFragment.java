@@ -52,15 +52,6 @@ public class BaseFragment extends Fragment {
                     Manifest.permission.CALL_PHONE)
                     == PackageManager.PERMISSION_GRANTED) {
                 startActivity(callIntent);
-
-                UsersDatabaseCommunication usersDatabaseCommunication   = UsersDatabaseCommunication.getInstance(getActivity());
-                usersDatabaseCommunication.updateCallsCounts(userModel.getId(),userModel.getmCallsCount() + 1);
-
-                Calendar calendar = Calendar.getInstance();
-                HistoryModel historyModel = new HistoryModel(calendar.getTime().toString(),userModel.getId());
-
-                HistoryDatabaseComunication historyDatabaseComunication = HistoryDatabaseComunication.getInstance(getActivity());
-                historyDatabaseComunication.insertIntoHistoryTable(historyModel);
             } else
                 checkPermissions();
         }

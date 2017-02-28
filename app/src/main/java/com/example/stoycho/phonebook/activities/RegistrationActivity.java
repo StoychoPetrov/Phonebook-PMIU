@@ -238,13 +238,15 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
             userId = -1;
 
         user.setId(userId);
-        if(usersDatabaseCommunication.updateUserInDatabase(user)) {                                     // if status of update query is siccess ,it will pop the fragment and show message. In other case will show error message.
+        if(usersDatabaseCommunication.updateUserInDatabase(user)) {     // if status of update query is siccess ,it will pop the fragment and show message. In other case will show error message.
             Toast.makeText(this, R.string.successUpdate, Toast.LENGTH_SHORT).show();
-            this.getIntent().putExtra(Utils.BUNDLE_USER_KEY,user);
-            this.getIntent().putExtra(Utils.BUNDLE_COUNTRY_KEY,country);
-            this.getIntent().putExtra(Utils.BUNDLE_POSITION_KEY,getIntent().getIntExtra(Utils.BUNDLE_POSITION_KEY,-1));
-            this.getIntent().putExtra(Utils.INTENT_UPDATE_USER_KEY,true);
-            getFragmentManager().popBackStack();
+            
+            Intent intent = new Intent();
+            intent.putExtra(Utils.BUNDLE_USER_KEY,user);
+            intent.putExtra(Utils.BUNDLE_COUNTRY_KEY,country);
+            intent.putExtra(Utils.BUNDLE_POSITION_KEY,getIntent().getIntExtra(Utils.BUNDLE_POSITION_KEY,-1));
+            setResult(RESULT_OK,intent);
+            finish();
         }
         else
             Toast.makeText(this,R.string.notSuccessEdit,Toast.LENGTH_SHORT).show();
@@ -298,11 +300,15 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
         CountryModel country = new CountryModel(mCountryEdb.getText().toString(),mPhoneCode);
         long id = usersDatabaseCommunication.saveInDatabase(user);                                                      // Trying to save the new contact. If the query is successed, the id is different from -1. If it is equal to -1, there is error with query.
         if(id != -1) {
+
             user.setId((int) id);
             Toast.makeText(this, R.string.message_for_register, Toast.LENGTH_SHORT).show();
-            getIntent().putExtra(Utils.BUNDLE_USER_KEY,user);
-            getIntent().putExtra(Utils.BUNDLE_COUNTRY_KEY,country);
-            getIntent().putExtra(Utils.INTENT_REFRESH_USERS_KEY,true);
+
+            Intent intent = new Intent();
+            intent.putExtra(Utils.BUNDLE_USER_KEY,user);
+            intent.putExtra(Utils.BUNDLE_COUNTRY_KEY,country);
+
+            setResult(RESULT_OK,intent);
             finish();
         }
         else
@@ -390,8 +396,17 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
         {
             CountryModel countryModel = data.getExtras().getParcelable(Utils.BUNDLE_COUNTRY_KEY);
             if(countryModel != null) {
+                findViewById(R.id.country_txt).setVisibility(View.VISIBLE);
+
                 mCountryId  = countryModel.getId();
                 mPhoneCode  = countryModel.getCallingCode();
+
+                if(mPhoneNumberEdb.getText().toString().equalsIgnoreCase(""))
+                    mPhoneNumberEdb.setText("");
+                else
+                    setFocusOfEditText(mPhoneNumberEdb,mPhoneTxt);
+
+                mPhoneNumberEdb.setText("+" + countryModel.getCallingCode());
                 mCountryEdb.setText(countryModel.getCountryName());
             }
         }

@@ -3,10 +3,10 @@ package com.example.stoycho.phonebook.fragments;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.example.stoycho.phonebook.Interfaces.OnClickViewInItem;
 import com.example.stoycho.phonebook.R;
 import com.example.stoycho.phonebook.activities.RegistrationActivity;
-import com.example.stoycho.phonebook.adapters.UsersRecyclerAdapter;
+import com.example.stoycho.phonebook.adapters.UsersAdapter;
 import com.example.stoycho.phonebook.database.UsersAndCountruesDatabaseComunication;
 import com.example.stoycho.phonebook.database.UsersDatabaseCommunication;
 import com.example.stoycho.phonebook.models.CountryModel;
@@ -24,12 +24,15 @@ import com.example.stoycho.phonebook.models.UserModel;
 import com.example.stoycho.phonebook.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
-public class ContactsFragment extends BaseFragment implements View.OnClickListener,OnClickViewInItem,RadioGroup.OnCheckedChangeListener {
+public class ContactsFragment extends BaseFragment implements View.OnClickListener,OnClickViewInItem,RadioGroup.OnCheckedChangeListener,ListView.OnItemClickListener {
 
     private ListView                    mListView;
-    private UsersRecyclerAdapter        mRecyclerAdapter;
+    private UsersAdapter                mRecyclerAdapter;
     private List<CountryModel>          mCountries;
     private List<UserModel>             mUsers;
     private FloatingActionButton        mNewContactButton;
@@ -63,19 +66,27 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
         mEmptyTxt               = (TextView)                root.findViewById(R.id.empty_txt);
 
         mUsers                  = new ArrayList<>();
-        mRecyclerAdapter        = new UsersRecyclerAdapter(getActivity(),mUsers);
+        mRecyclerAdapter        = new UsersAdapter(getActivity(),mUsers);
     }
 
     private void setListeners()
     {
         mNewContactButton.setOnClickListener(this);
         mRecyclerAdapter.setClickViewFromItem(this);
+        mListView.setOnItemClickListener(this);
     }
 
-    private void loadUsers()
+    public void loadUsers()
     {
         mCountries      = new ArrayList<>();
         mUsers          = UsersAndCountruesDatabaseComunication.getInstance(getActivity()).selectUsersAndTheirCountries(mCountries,UsersAndCountruesDatabaseComunication.WITHOUT_COUNTRY_ID,null,null,null,true);  // make query for all users with their countries from Users table and Countries table
+
+        Collections.sort(mUsers, new Comparator<UserModel>() {
+            @Override
+            public int compare(UserModel userModel, UserModel t1) {
+                return userModel.getFirstName().substring(0,1).compareToIgnoreCase(t1.getFirstName().substring(0,1));
+            }
+        });
 
         mRecyclerAdapter.setUsers(mUsers);
         mRecyclerAdapter.notifyDataSetChanged();
@@ -85,17 +96,6 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
         }
         else {
             mEmptyTxt.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void refreshUsers(UserModel user, CountryModel country)
-    {
-        mCountries.add(country);
-        mUsers.add(user);
-        mRecyclerAdapter.notifyDataSetChanged();
-
-        if(mUsers.size() > 0) {
-            mEmptyTxt.setVisibility(View.GONE);
         }
     }
 
@@ -114,14 +114,7 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
     {
         Intent registrationActivity = new Intent(getActivity(),RegistrationActivity.class);
         getActivity().overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
-        startActivity(registrationActivity);
-    }
-
-    private void updateUser(UserModel user, CountryModel country, int position)                     //update user in ListView
-    {
-        mUsers.set(position,user);
-        mCountries.set(position,country);
-        mRecyclerAdapter.notifyDataSetChanged();
+        getActivity().startActivityForResult(registrationActivity,Utils.ADD_CONTACT_REQUEST_CODE);
     }
 
     private void deleteUser(int position)                                                       //Delete user from database and listview
@@ -141,19 +134,6 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
         }
         else
             Toast.makeText(getActivity(),getString(R.string.notSuccessDelete),Toast.LENGTH_SHORT).show();
-    }
-
-    private void onEdit(int position)                                            //start RegistrationFragment for editing user information
-    {
-        UserModel user                      = mUsers.get(position);
-        CountryModel country                = mCountries.get(position);
-
-        Intent registrationActivity = new Intent(getActivity(),RegistrationActivity.class);
-        registrationActivity.putExtra(Utils.BUNDLE_USER_KEY,user);
-        registrationActivity.putExtra(Utils.BUNDLE_COUNTRY_KEY,country);
-        registrationActivity.putExtra(Utils.BUNDLE_POSITION_KEY,position);
-        startActivity(registrationActivity);
-        getActivity().overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
     }
 
     private void selectImageForUser(int position)
@@ -193,5 +173,14 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
                 selectImageForUser(position);
                 break;
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+        Intent intent = new Intent(getActivity(),RegistrationActivity.class);
+        intent.putExtra(Utils.BUNDLE_USER_KEY,      mUsers.get(position));
+        intent.putExtra(Utils.BUNDLE_COUNTRY_KEY,   mCountries.get(position));
+
+        getActivity().startActivityForResult(intent,Utils.EDIT_CONTACT_REQUEST_CODE);
     }
 }

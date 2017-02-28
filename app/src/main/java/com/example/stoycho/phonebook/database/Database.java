@@ -39,6 +39,13 @@ public class Database extends SQLiteOpenHelper {
     protected final static String COLUMN_HISTORY_ID             = "history_id";
     protected final static String COLUMN_HISTORY_DATE           = "history_date";
     protected final static String COLUMN_USER_ID_FORIGN_KEY     = "user_id";
+    protected final static String COLUMN_NOT_KNOWN_PHONE_NUMBER = "not_known_phone";
+    protected final static String COLUMN_STATE_ID_FOREIGN_KEY   = "calling_state";
+
+    /*********** Phone calls states ***************/
+    protected final static String STATES_TABLE_NAME             = "calling_states";
+    protected final static String COLUMN_STATE_ID               = "state_id";
+    protected final static String COLUMN_STATE_NAME             = "state_name";
 
     /*********** Create tables *******************/
     private final static String CREATE_USERS = " CREATE TABLE " + USERS_TABLE_NAME + " ( " + COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_FIRST_NAME + " TEXT, " + COLUMN_LAST_NAME + " TEXT, "
@@ -48,7 +55,12 @@ public class Database extends SQLiteOpenHelper {
     private final static String CREATE_COUNTRIES = " CREATE TABLE " + COUNTRIES_TABLE_NAME + " ( " + COLUMN_COUNTRY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_COUNTRY_NAME + " TEXT, "
             + COLUMN_CALLING_CODE + " TEXT)";
 
-    private final static String CREATE_HISTORY   = " CREATE TABLE " + HISTORY_TABLE_NAME + " ( " + COLUMN_HISTORY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_HISTORY_DATE + " TEXT, " + COLUMN_USER_ID_FORIGN_KEY + " INTEGER, FOREIGN KEY (" + COLUMN_USER_ID_FORIGN_KEY + ") REFERENCES " + USERS_TABLE_NAME + "(" + COLUMN_USER_ID + "))";
+    private final static String CREATE_HISTORY   = " CREATE TABLE " + HISTORY_TABLE_NAME + " ( " + COLUMN_HISTORY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_HISTORY_DATE + " TEXT, " + COLUMN_USER_ID_FORIGN_KEY + " INTEGER, " + COLUMN_STATE_ID_FOREIGN_KEY + " INTEGER, " + COLUMN_NOT_KNOWN_PHONE_NUMBER + " TEXT, "
+            + " FOREIGN KEY (" + COLUMN_USER_ID_FORIGN_KEY + ") REFERENCES " + USERS_TABLE_NAME + "(" + COLUMN_USER_ID + "), "
+            + " FOREIGN KEY (" + COLUMN_STATE_ID_FOREIGN_KEY + ") REFERENCES "  + STATES_TABLE_NAME + "(" + COLUMN_STATE_ID + "));";
+
+
+    private final static String CREATE_STATES    = " CREATE TABLE " + STATES_TABLE_NAME  + " ( " + COLUMN_STATE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_STATE_NAME + " TEXT)";
 
     public Database(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -58,6 +70,7 @@ public class Database extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase database) {
         database.execSQL(CREATE_COUNTRIES);
         database.execSQL(CREATE_USERS);
+        database.execSQL(CREATE_STATES);
         database.execSQL(CREATE_HISTORY);
     }
 
@@ -66,6 +79,7 @@ public class Database extends SQLiteOpenHelper {
         if(oldVersion != newVersion) {
             database.execSQL("DROP TABLE IF EXISTS " + USERS_TABLE_NAME);
             database.execSQL("DROP TABLE IF EXISTS " + COUNTRIES_TABLE_NAME);
+            database.execSQL("DROP TABLE IF EXISTS " + STATES_TABLE_NAME);
             database.execSQL("DROP TABLE IF EXISTS " + HISTORY_TABLE_NAME);
             onCreate(database);
         }

@@ -82,125 +82,17 @@
         app:tabIndicatorColor       ="@android:color/white"
         app:tabIndicatorHeight      ="3dp"/>
 
+    <View
+        android:id="@+id/shade"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_below="@+id/tabs_layout"
+        android:background="@drawable/shadow"/>
+
     <android.support.v4.view.ViewPager
         android:id              ="@+id/view_pager"
         android:layout_width    ="match_parent"
         android:layout_height   ="match_parent"
-        android:layout_below    ="@+id/tabs_layout"/>
-
-    <RelativeLayout
-        android:id                          ="@+id/filter_layout"
-        android:layout_width                ="match_parent"
-        android:layout_height               ="match_parent"
-        android:paddingTop                  ="10dp"
-        android:background                  ="@color/select_user_item_background"
-        android:visibility                  ="visible">
-
-        <TextView
-            android:id                      ="@+id/gender_txt"
-            android:layout_width            ="wrap_content"
-            android:layout_height           ="wrap_content"
-            android:text                    ="@string/info_gender"
-            android:textSize                ="17sp"
-            android:textColor               ="@android:color/black"
-            android:textStyle               ="bold"
-            android:paddingRight            ="10dp"
-            android:paddingLeft             ="10dp"/>
-
-        <!-- Radio group about filter by gender -->
-        <RadioGroup
-            android:id                      ="@+id/gender_radio"
-            android:layout_width            ="match_parent"
-            android:layout_height           ="wrap_content"
-            android:layout_below            ="@+id/gender_txt"
-            android:layout_toRightOf        ="@+id/gender_txt"
-            android:layout_toEndOf          ="@id/gender_txt"
-            android:orientation             ="vertical"
-            android:checkedButton           ="@+id/all"
-            android:visibility              ="visible">
-
-            <RadioButton
-                android:id                  ="@+id/all"
-                android:layout_width        ="wrap_content"
-                android:layout_height       ="wrap_content"
-                android:text                ="@string/all"
-                android:paddingRight        ="5dp"
-                android:paddingLeft         ="5dp" />
-
-            <RadioButton
-                android:layout_width        ="wrap_content"
-                android:layout_height       ="wrap_content"
-                android:text                ="@string/male"
-                android:paddingRight        ="5dp"
-                android:paddingLeft         ="5dp"/>
-
-            <RadioButton
-                android:layout_width        ="wrap_content"
-                android:layout_height       ="wrap_content"
-                android:text                ="@string/female"
-                android:paddingLeft         ="5dp"
-                android:paddingRight        ="5dp"/>
-
-        </RadioGroup>
-
-        <LinearLayout
-            android:id                      ="@+id/filter_country_layout"
-            android:layout_width            ="match_parent"
-            android:layout_height           ="wrap_content"
-            android:layout_below            ="@+id/gender_radio"
-            android:orientation             ="horizontal">
-
-            <TextView
-                android:layout_width        ="wrap_content"
-                android:layout_height       ="wrap_content"
-                android:text                ="@string/info_country"
-                android:textStyle           ="bold"
-                android:textSize            ="17sp"
-                android:textColor           ="@android:color/black"
-                android:padding             ="10dp"/>
-
-            <EditText
-                android:id                  ="@+id/country_editbox"
-                android:layout_width        ="match_parent"
-                android:layout_height       ="wrap_content"
-                android:layout_marginRight  ="30dp"
-                android:layout_marginEnd    ="30dp"
-                android:textSize            ="15sp"
-                android:text                ="@string/all"
-                android:paddingLeft         ="10dp"
-                android:paddingRight        ="10dp"
-                android:focusable           ="false"
-                android:drawableRight       ="@mipmap/ic_keyboard_arrow_down_black_24dp"
-                android:hint                ="@string/country"/>
-
-        </LinearLayout>
-
-        <RelativeLayout
-            android:layout_width            ="match_parent"
-            android:layout_height           ="match_parent"
-            android:layout_below            ="@+id/filter_country_layout"
-            android:padding                 ="15dp"
-            android:gravity                 ="bottom">
-
-            <Button
-                android:id                  ="@+id/reset_button"
-                android:layout_width        ="wrap_content"
-                android:layout_height       ="wrap_content"
-                android:text                ="@string/reset"
-                android:textColor           ="@android:color/white"
-                android:background          ="@color/colorPrimary"/>
-
-            <Button
-                android:id                      ="@+id/apply_button"
-                android:layout_width            ="wrap_content"
-                android:layout_height           ="wrap_content"
-                android:layout_alignParentRight ="true"
-                android:text                    ="@string/apply"
-                android:textColor               ="@android:color/white"
-                android:background              ="@color/colorPrimary"/>
-
-        </RelativeLayout>
-
-    </RelativeLayout>
+        android:layout_below    ="@+id/shade"/>
 
 </RelativeLayout>
