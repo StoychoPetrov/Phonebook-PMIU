@@ -59,8 +59,7 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
         return root;
     }
 
-    private void initUI(View root)
-    {
+    private void initUI(View root) {
         mNewContactButton       = (FloatingActionButton)    root.findViewById(R.id.add_user);
         mListView               = (ListView)                root.findViewById(R.id.recycleView);
         mEmptyTxt               = (TextView)                root.findViewById(R.id.empty_txt);
@@ -69,15 +68,13 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
         mRecyclerAdapter        = new UsersAdapter(getActivity(),mUsers);
     }
 
-    private void setListeners()
-    {
+    private void setListeners() {
         mNewContactButton.setOnClickListener(this);
         mRecyclerAdapter.setClickViewFromItem(this);
         mListView.setOnItemClickListener(this);
     }
 
-    public void loadUsers()
-    {
+    public void loadUsers() {
         mCountries      = new ArrayList<>();
         mUsers          = UsersAndCountruesDatabaseComunication.getInstance(getActivity()).selectUsersAndTheirCountries(mCountries,UsersAndCountruesDatabaseComunication.WITHOUT_COUNTRY_ID,null,null,null,true);  // make query for all users with their countries from Users table and Countries table
 
@@ -110,34 +107,14 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
         }
     }
 
-    private void onAddUser()                                                           //start RegisterFragment
-    {
+    private void onAddUser() {                                                     //start RegisterFragment
+
         Intent registrationActivity = new Intent(getActivity(),RegistrationActivity.class);
         getActivity().overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
         getActivity().startActivityForResult(registrationActivity,Utils.ADD_CONTACT_REQUEST_CODE);
     }
 
-    private void deleteUser(int position)                                                       //Delete user from database and listview
-    {
-        UsersDatabaseCommunication usersDatabaseCommunication = UsersDatabaseCommunication.getInstance(getActivity());
-
-        if(usersDatabaseCommunication.deleteUserFromDatabase(mUsers.get(position))) {           //delete user from database, method return true if the query is successful
-            mUsers.remove(position);
-            mCountries.remove(position);
-            mRecyclerAdapter.notifyDataSetChanged();
-
-            if(mUsers.size() == 0) {
-                mEmptyTxt.setVisibility(View.VISIBLE);
-            }
-
-            Toast.makeText(getActivity(), getString(R.string.successDelete), Toast.LENGTH_SHORT).show();
-        }
-        else
-            Toast.makeText(getActivity(),getString(R.string.notSuccessDelete),Toast.LENGTH_SHORT).show();
-    }
-
-    private void selectImageForUser(int position)
-    {
+    private void selectImageForUser(int position) {
         mSelectedItemPosition = position;
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -154,8 +131,7 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
             mFilterGender          = null;
     }
 
-    public void refreshList(String searchString)
-    {
+    public void refreshList(String searchString) {
         mUsers  = UsersAndCountruesDatabaseComunication.getInstance(getActivity()).selectUsersAndTheirCountries(mCountries,UsersAndCountruesDatabaseComunication.WITHOUT_COUNTRY_ID,null,null,searchString,true);
         mRecyclerAdapter.setUsers(mUsers);
         mRecyclerAdapter.notifyDataSetChanged();
@@ -164,8 +140,7 @@ public class ContactsFragment extends BaseFragment implements View.OnClickListen
     @Override
     public void onClickView(View view, int position) {
         int clickedViewId = view.getId();
-        switch (clickedViewId)
-        {
+        switch (clickedViewId) {
             case R.id.call_button:
                 callToNumber(mCountries.get(position).getCallingCode(),mUsers.get(position));
                 break;

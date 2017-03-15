@@ -10,7 +10,6 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.example.stoycho.phonebook.R;
-import com.example.stoycho.phonebook.models.CountryModel;
 import com.example.stoycho.phonebook.models.UserModel;
 import com.example.stoycho.phonebook.utils.Utils;
 

@@ -14,7 +14,7 @@ public class CallingStatesDatabaseCommunication extends Database {
 
     private static CallingStatesDatabaseCommunication instance = null;
 
-    public CallingStatesDatabaseCommunication(Context context) {
+    private CallingStatesDatabaseCommunication(Context context) {
         super(context);
     }
 
@@ -34,6 +34,26 @@ public class CallingStatesDatabaseCommunication extends Database {
         db.close();
 
         return resultFromQuery;
+    }
+
+    public String getNameOfState(int stateId){
+
+        String query = "SELECT " + COLUMN_STATE_NAME + " FROM " + STATES_TABLE_NAME
+                + " WHERE " + COLUMN_STATE_ID + "=" + String.valueOf(stateId);
+
+        SQLiteDatabase database = getWritableDatabase();
+        Cursor cursor   = database.rawQuery(query, null);
+
+        String stateName = null;
+
+        if (cursor.moveToFirst()) {
+           stateName    = cursor.getString(cursor.getColumnIndex(COLUMN_STATE_NAME));
+        }
+
+        cursor.close();
+        database.close();
+
+        return stateName;
     }
 
     public int getCountOfStates() {

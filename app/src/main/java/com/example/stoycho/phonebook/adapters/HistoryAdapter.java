@@ -1,12 +1,11 @@
 package com.example.stoycho.phonebook.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.stoycho.phonebook.R;
@@ -17,8 +16,6 @@ import com.example.stoycho.phonebook.models.UserModel;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,12 +26,14 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
     private List<HistoryModel>                      mHistoryList;
     private UsersAndCountruesDatabaseComunication   mUsersAndCountruesDatabaseComunication;
+    private Context                                 mContext;
 
     private static final int TYPE_SECTION_TITLE     = 1;
     private static final int TYPE_SECTION_HISTORY   = 2;
 
     public HistoryAdapter(Context context,List<HistoryModel> histories)
     {
+        mContext        = context;
         mHistoryList    = histories;
         mUsersAndCountruesDatabaseComunication  = UsersAndCountruesDatabaseComunication.getInstance(context);
     }
@@ -66,7 +65,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             if(historyModel.getmUserId() > -1)
                 userModel   = mUsersAndCountruesDatabaseComunication.selectUserById(historyModel.getmUserId(),countryModel);
 
-            SimpleDateFormat hourFormat         = new SimpleDateFormat("HH:MM");
+            SimpleDateFormat hourFormat         = new SimpleDateFormat("HH:mm");
 
             if(userModel != null)
                 holder.mContactName.setText(userModel.getFirstName());
@@ -79,7 +78,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
                 e.printStackTrace();
             }
 
-            holder.mState.setText(historyModel.getmCallingState());
+//            holder.mState.setText(CallingStatesDatabaseCommunication.getInstance(mContext).getNameOfState(historyModel.getmCallingStateId()));
         }
     }
 
@@ -93,7 +92,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         public TextView         mContactName;
         public TextView         mDate;
         public TextView         mHeatherTxt;
-        public TextView         mState;
+        public ImageView        mState;
         private int             mTypeId;
 
         public ViewHolder(View itemView,int viewType) {
@@ -105,7 +104,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             else {
                 mContactName    = (TextView) itemView.findViewById(R.id.contact_name);
                 mDate           = (TextView) itemView.findViewById(R.id.date);
-                mState          = (TextView) itemView.findViewById(R.id.state);
+                mState          = (ImageView) itemView.findViewById(R.id.state);
                 mTypeId         = TYPE_SECTION_HISTORY;
             }
         }

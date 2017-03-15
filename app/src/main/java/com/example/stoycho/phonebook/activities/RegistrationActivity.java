@@ -57,8 +57,7 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
             setInformations();
     }
     
-    private void initUI()
-    {
+    private void initUI() {
         mFirstNameEdb       = (EditText)    findViewById(R.id.first_name);
         mLastNameEdb        = (EditText)    findViewById(R.id.last_name);
         mCountryEdb         = (EditText)    findViewById(R.id.country);
@@ -75,8 +74,7 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
         mDelete             = (Button)      findViewById(R.id.delete);
     }
 
-    private void setListeners()
-    {
+    private void setListeners() {
         mAddBtn.setOnClickListener(this);
         mCountryEdb.setOnClickListener(this);
         mEmailEdb.setOnFocusChangeListener(this);
@@ -88,8 +86,7 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
         mPhoneNumberEdb.setOnFocusChangeListener(this);
     }
 
-    private void setInformations()
-    {
+    private void setInformations() {
         if(getIntent() != null) {
 
             CountryModel    country     = getIntent().getParcelableExtra(Utils.BUNDLE_COUNTRY_KEY);
@@ -166,8 +163,7 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
         }
     }
 
-    private void deleteUser()
-    {
+    private void deleteUser() {
         new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.deleteEntry))
                 .setMessage(getString(R.string.deleteInfo))
@@ -182,8 +178,7 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
                 .show();
     }
 
-    private void changeToEdit()
-    {
+    private void changeToEdit() {
         mFirstNameEdb.setEnabled(true);
         mLastNameEdb.setEnabled(true);
         mCountryEdb.setEnabled(true);
@@ -197,8 +192,7 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
         mAddBtn.setText(getString(R.string.save));
     }
 
-    private void onEdit()
-    {
+    private void onEdit() {
         if(!mFirstNameEdb.getText().toString().equals("") && !mLastNameEdb.getText().toString().equals("") && !mCountryEdb.getText().toString().equals("")
                 && !mEmailEdb.getText().toString().equals("") && !mHasEmailError && !mHasPhoneError && (mMaleRadioBtn.isChecked() || mFemaleRadioBtn.isChecked()))                  // if every box is correct, will show dialog with question to user, in another case will show message with error.
         {
@@ -222,8 +216,7 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
             Toast.makeText(this,getString(R.string.registrationError),Toast.LENGTH_SHORT).show();
     }
 
-    private void updateUser()
-    {
+    private void updateUser() {
         UsersDatabaseCommunication usersDatabaseCommunication = UsersDatabaseCommunication.getInstance(this);
 
         UserModel user                                               = new UserModel(mFirstNameEdb.getText().toString(),mLastNameEdb.getText().toString(),mCountryId,mEmailEdb.getText().toString(),
@@ -252,8 +245,8 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
             Toast.makeText(this,R.string.notSuccessEdit,Toast.LENGTH_SHORT).show();
     }
 
-    private void onAdd()                                                                                                                                    //if every box is correct , it wil show question to user.
-    {
+    private void onAdd(){                                                                                                                                    //if every box is correct , it wil show question to user.
+
         if(!mFirstNameEdb.getText().toString().equals("") && !mLastNameEdb.getText().toString().equals("") && !mCountryEdb.getText().toString().equals("")
                 && !mEmailEdb.getText().toString().equals("") && !mHasEmailError && !mHasPhoneError && (mMaleRadioBtn.isChecked() || mFemaleRadioBtn.isChecked()))
         {
@@ -351,8 +344,7 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
                     removeFocus(mEmailEdb,mEmailTxt);
                     checkEmailValidation();
                 }
-                else
-                {
+                else {
                     setFocusOfEditText(mEmailEdb,mEmailTxt);
                 }
                 break;

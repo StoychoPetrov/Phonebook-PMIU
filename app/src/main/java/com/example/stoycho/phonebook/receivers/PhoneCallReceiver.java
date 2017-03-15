@@ -8,6 +8,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.telephony.PhoneNumberUtils;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import com.example.stoycho.phonebook.R;
 import com.example.stoycho.phonebook.activities.MainActivity;
@@ -27,35 +28,31 @@ import java.util.List;
  */
 
 public class PhoneCallReceiver extends CallingReceiver {
+
     @Override
     protected void onIncomingCallReceived(Context ctx, String number, Date start) {
-
-      saveInHistories(ctx,number,Utils.STATE_INCOMMING,start);
     }
 
     @Override
     protected void onIncomingCallAnswered(Context ctx, String number, Date start) {
-
     }
 
     @Override
     protected void onIncomingCallEnded(Context ctx, String number, Date start, Date end) {
-
     }
 
     @Override
     protected void onOutgoingCallStarted(Context ctx, String number, Date start) {
-      saveInHistories(ctx,number,Utils.STATE_OUTGOING,start);
+      saveInHistories(ctx,number,Utils.STATE_OUTGOING,start,false);
     }
 
     @Override
     protected void onOutgoingCallEnded(Context ctx, String number, Date start, Date end) {
-
     }
 
     @Override
     protected void onMissedCall(Context ctx, String number, Date start) {
-        saveInHistories(ctx,number,Utils.STATE_MISSED,start);
+        saveInHistories(ctx,number,Utils.STATE_MISSED,start,true);
     }
 
     private String getCountryCode(Context context,String phone){
@@ -72,7 +69,7 @@ public class PhoneCallReceiver extends CallingReceiver {
         return null;
     }
 
-    private void saveInHistories(Context context, String number, int state, Date date){
+    private void saveInHistories(Context context, String number, int state, Date date, boolean missed){
         if(number != null && !number.equalsIgnoreCase("")) {
             String      countryCode = getCountryCode(context, number);
             UserModel   userModel = null;
@@ -85,7 +82,8 @@ public class PhoneCallReceiver extends CallingReceiver {
                 historyModel.setmCallingStateId(state);
                 HistoryDatabaseComunication.getInstance(context).insertIntoHistoryTable(historyModel);
                 UsersDatabaseCommunication.getInstance(context).updateCallsCounts(userModel.getId(),userModel.getmCallsCount() + 1);
-                createNotification(context,number,userModel);
+                if(missed)
+                    createNotification(context,number,userModel);
             }
             else {
                 HistoryModel historyModel = new HistoryModel();
@@ -93,7 +91,8 @@ public class PhoneCallReceiver extends CallingReceiver {
                 historyModel.setmNotKnownPhone(number);
 
                 HistoryDatabaseComunication.getInstance(context).insertIntoHistoryTable(historyModel);
-                createNotification(context,number,null);
+                if(missed)
+                    createNotification(context,number,null);
             }
         }
     }
@@ -104,9 +103,9 @@ public class PhoneCallReceiver extends CallingReceiver {
         builder.setSmallIcon(R.mipmap.ic_phone_missed_white_24dp);
         builder.setContentTitle("You missed call");
 
-        if(userModel != null && userModel.getFirstName() != null && userModel.getFirstName().equalsIgnoreCase(""))
+        if(userModel != null && userModel.getFirstName() != null && !userModel.getFirstName().equalsIgnoreCase(""))
             builder.setContentText(userModel.getFirstName());
-        else if(number != null && number.equalsIgnoreCase(""))
+        else if(number != null && !number.equalsIgnoreCase(""))
             builder.setContentText(number);
 
         Intent              resultIntent = new Intent(context, MainActivity.class);
