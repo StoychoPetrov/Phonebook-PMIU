@@ -9,10 +9,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.stoycho.phonebook.R;
+import com.example.stoycho.phonebook.database.HistoryDatabaseComunication;
 import com.example.stoycho.phonebook.database.UsersAndCountruesDatabaseComunication;
 import com.example.stoycho.phonebook.models.CountryModel;
 import com.example.stoycho.phonebook.models.HistoryModel;
 import com.example.stoycho.phonebook.models.UserModel;
+import com.example.stoycho.phonebook.utils.Utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -69,16 +71,27 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
             if(userModel != null)
                 holder.mContactName.setText(userModel.getFirstName());
-            else
-                holder.mContactName.setText(historyModel.getmNotKnownPhone());
+            else if(historyModel.getmNotKnownPhone() != null){
+                String countryCode          = Utils.getCountryCode(mContext,historyModel.getmNotKnownPhone());
+                String phone                = historyModel.getmNotKnownPhone();
+                countryModel                = new CountryModel();
+                UserModel   contact = null;
+                if(countryCode != null)
+                    contact = mUsersAndCountruesDatabaseComunication.selectByPhoneNumber(phone.substring(countryCode.length()),countryModel);
+
+                if(contact != null) {
+                    holder.mContactName.setText(contact.getFirstName());
+                    HistoryDatabaseComunication.getInstance(mContext).updateHistory(contact.getId(),historyModel.getmHistoryId());
+                }
+                else
+                    holder.mContactName.setText(historyModel.getmNotKnownPhone());
+            }
 
             try {
                 holder.mDate.setText(hourFormat.format(new SimpleDateFormat("EEE MMM dd hh:mm:ss 'GMT'Z yyyy").parse(historyModel.getmDate())));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-
-//            holder.mState.setText(CallingStatesDatabaseCommunication.getInstance(mContext).getNameOfState(historyModel.getmCallingStateId()));
         }
     }
 

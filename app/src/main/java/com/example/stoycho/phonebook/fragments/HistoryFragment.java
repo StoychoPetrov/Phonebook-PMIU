@@ -119,6 +119,5 @@ public class HistoryFragment extends Fragment {
         mHistoryList    = mHistoryDatabaseComunication.selectAllHistory(searchString);
         mHistoryAdapter.setmHistoryList(mHistoryList);
         mHistoryAdapter.notifyDataSetChanged();
-
     }
 }

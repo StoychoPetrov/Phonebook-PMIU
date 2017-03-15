@@ -87,4 +87,17 @@ public class HistoryDatabaseComunication extends Database {
         database.close();
     }
 
+    public boolean updateHistory(int userId,int historyId){
+        SQLiteDatabase database = getWritableDatabase();
+        ContentValues values    = new ContentValues();
+
+        values.put(COLUMN_USER_ID_FORIGN_KEY,userId);
+        values.put(COLUMN_NOT_KNOWN_PHONE_NUMBER,"");
+
+        int result = database.update(HISTORY_TABLE_NAME,values,COLUMN_HISTORY_ID + "=?",new String[]{String.valueOf(historyId)});
+        database.close();
+
+        return result > 0;
+    }
+
 }

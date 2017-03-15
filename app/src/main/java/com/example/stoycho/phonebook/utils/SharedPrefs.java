@@ -5,6 +5,4 @@ package com.example.stoycho.phonebook.utils;
  */
 
 public class SharedPrefs {
-
-
 }

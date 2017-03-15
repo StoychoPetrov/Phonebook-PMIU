@@ -93,22 +93,22 @@ public class UsersDatabaseCommunication extends Database {
         return result > 0;
     }
 
-    public UserModel getUserIdByPhone(String phoneNumber, int callingCount) {
+    public UserModel getUserIdByPhone(String phoneNumber) {
 
         UserModel userModel = new UserModel();
         String query = "SELECT " + COLUMN_USER_ID + "," + COLUMN_CALLS_COUNT + ", " + COLUMN_FIRST_NAME + " FROM " + USERS_TABLE_NAME
-                + " WHERE " + COLUMN_PHONE_NUMBER + " = " + phoneNumber;
+                + " WHERE " + COLUMN_PHONE_NUMBER + " LIKE " + phoneNumber;
 
         SQLiteDatabase database = getWritableDatabase();
         Cursor cursor   = database.rawQuery(query, null);
-
-        int userId = -1;
 
         if (cursor.moveToFirst()) {
             userModel.setId(cursor.getInt(cursor.getColumnIndex(COLUMN_USER_ID)));
             userModel.setmCallsCount(cursor.getInt(cursor.getColumnIndex(COLUMN_CALLS_COUNT)));
             userModel.setFirstName(cursor.getString(cursor.getColumnIndex(COLUMN_FIRST_NAME)));
         }
+        else
+            userModel   = null;
 
         cursor.close();
         database.close();

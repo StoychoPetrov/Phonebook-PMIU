@@ -248,17 +248,18 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private void searchingByName(String charSequence,int fragmentIndex)
     {
-        switch (fragmentIndex)
-        {
-            case 0:
-                mViewPagerAdapter.getmFavouritesFragment().refreshList(charSequence);
-                break;
-            case 1:
-                mViewPagerAdapter.getmHistoryFragment().refreshList(charSequence);
-                break;
-            case 2:
-                mViewPagerAdapter.getmContactsFragment().refreshList(charSequence);
-                break;
+        if(mViewPager != null) {
+            switch (fragmentIndex) {
+                case 0:
+                    mViewPagerAdapter.getmFavouritesFragment().refreshList(charSequence);
+                    break;
+                case 1:
+                    mViewPagerAdapter.getmHistoryFragment().refreshList(charSequence);
+                    break;
+                case 2:
+                    mViewPagerAdapter.getmContactsFragment().refreshList(charSequence);
+                    break;
+            }
         }
     }
 
@@ -306,6 +307,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         {
             if(requestCode == Utils.ADD_CONTACT_REQUEST_CODE  || requestCode == Utils.EDIT_CONTACT_REQUEST_CODE) {
                 mViewPagerAdapter.getmContactsFragment().loadUsers();
+                mViewPagerAdapter.getmHistoryFragment().refreshList("");
             }
         }
     }

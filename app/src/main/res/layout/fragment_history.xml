@@ -1,4 +1,4 @@
-<FrameLayout
+<RelativeLayout
     xmlns:android         ="http://schemas.android.com/apk/res/android"
     xmlns:tools           ="http://schemas.android.com/tools"
     android:layout_width  ="match_parent"
@@ -12,4 +12,15 @@
       android:dividerHeight     ="0dp"
       android:divider           ="@android:color/holo_green_light"/>
 
-</FrameLayout>
+  <TextView
+      android:id                      ="@+id/empty_txt"
+      android:layout_width            ="wrap_content"
+      android:layout_height           ="wrap_content"
+      android:layout_centerInParent   ="true"
+      android:text                    ="@string/no_contacts"
+      android:textStyle               ="bold"
+      android:textColor               ="@android:color/black"
+      android:textSize                ="20sp"
+      android:visibility              ="gone"/>
+
+</RelativeLayout>

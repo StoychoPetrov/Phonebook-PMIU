@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Patterns;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -24,7 +25,7 @@ import com.example.stoycho.phonebook.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RegistrationActivity extends BaseActivity implements View.OnClickListener, View.OnFocusChangeListener {
+public class RegistrationActivity extends BaseActivity implements View.OnClickListener, View.OnFocusChangeListener,EditText.OnKeyListener {
 
     private EditText    mFirstNameEdb;
     private EditText    mLastNameEdb;
@@ -84,6 +85,7 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
         mLastNameEdb.setOnFocusChangeListener(this);
         mEmailEdb.setOnFocusChangeListener(this);
         mPhoneNumberEdb.setOnFocusChangeListener(this);
+        mPhoneNumberEdb.setOnKeyListener(this);
     }
 
     private void setInformations() {
@@ -289,7 +291,7 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
         UsersDatabaseCommunication usersDatabaseCommunication = UsersDatabaseCommunication.getInstance(this);
 
         UserModel user = new UserModel(mFirstNameEdb.getText().toString(),mLastNameEdb.getText().toString(),mCountryId,mEmailEdb.getText().toString()
-                ,mPhoneNumberEdb.getText().toString(),mMaleRadioBtn.isChecked() ? getString(R.string.male):getString(R.string.female),0);
+                ,mPhoneNumberEdb.getText().toString().substring(mPhoneCode.length()),mMaleRadioBtn.isChecked() ? getString(R.string.male):getString(R.string.female),0);
         CountryModel country = new CountryModel(mCountryEdb.getText().toString(),mPhoneCode);
         long id = usersDatabaseCommunication.saveInDatabase(user);                                                      // Trying to save the new contact. If the query is successed, the id is different from -1. If it is equal to -1, there is error with query.
         if(id != -1) {
@@ -398,9 +400,20 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
                 else
                     setFocusOfEditText(mPhoneNumberEdb,mPhoneTxt);
 
+                setFocusOfEditText(mPhoneNumberEdb,mPhoneTxt);
                 mPhoneNumberEdb.setText("+" + countryModel.getCallingCode());
                 mCountryEdb.setText(countryModel.getCountryName());
             }
         }
+    }
+
+    @Override
+    public boolean onKey(View view, int i, KeyEvent keyEvent) {
+        if(view.getId() == mPhoneNumberEdb.getId() && keyEvent.getKeyCode() == KeyEvent.KEYCODE_DEL){
+            if(("+" + mPhoneCode).equalsIgnoreCase(mPhoneNumberEdb.getText().toString())){
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -3,6 +3,10 @@ package com.example.stoycho.phonebook.utils;
 import android.content.Context;
 
 import com.example.stoycho.phonebook.R;
+import com.example.stoycho.phonebook.database.CountriesDatabaseCommunication;
+import com.example.stoycho.phonebook.models.CountryModel;
+
+import java.util.List;
 
 /**
  * Created by stoycho.petrov on 14/12/2016.
@@ -55,6 +59,20 @@ public class Utils {
             if(letter.equalsIgnoreCase(String.valueOf(i)))
                 return colors[index];
             index++;
+        }
+        return null;
+    }
+
+    public static String getCountryCode(Context context, String phone){
+
+        CountriesDatabaseCommunication countriesDatabaseCommunication = CountriesDatabaseCommunication.getInstance(context);
+        List<CountryModel> countries                      = countriesDatabaseCommunication.selectAllCountriesFromDatabase(CountriesDatabaseCommunication.SELECT_ALL_COUNTRIES,null);
+
+        for(CountryModel countryModel : countries) {
+            if (countryModel.getCallingCode() != null && !countryModel.getCallingCode().equalsIgnoreCase("")) {
+                if (phone.contains("+" + countryModel.getCallingCode()))
+                    return countryModel.getCallingCode();
+            }
         }
         return null;
     }

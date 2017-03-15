@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.TextView;
 
 import com.example.stoycho.phonebook.R;
 import com.example.stoycho.phonebook.adapters.FavouritesGridAdapter;
@@ -23,6 +24,7 @@ public class FavouritesFragment extends BaseFragment implements GridView.OnItemC
     private FavouritesGridAdapter   mGridAdapter;
     private List<UserModel>         mContacts;
     private List<CountryModel>      mCountries;
+    private TextView                mEmptyTxt;
 
     private UsersAndCountruesDatabaseComunication usersAndCountruesDatabaseComunication;
 
@@ -33,11 +35,16 @@ public class FavouritesFragment extends BaseFragment implements GridView.OnItemC
         initUI(root);
         setListeners();
 
-        usersAndCountruesDatabaseComunication  = UsersAndCountruesDatabaseComunication.getInstance(getActivity());
-        mContacts  = usersAndCountruesDatabaseComunication.selectFavurites(mCountries);
+        usersAndCountruesDatabaseComunication   = UsersAndCountruesDatabaseComunication.getInstance(getActivity());
+        mContacts                               = usersAndCountruesDatabaseComunication.selectFavurites(mCountries);
 
         mGridAdapter = new FavouritesGridAdapter(getActivity(),mContacts);
         mGridView.setAdapter(mGridAdapter);
+
+        if(mContacts.size() < 1)
+            mEmptyTxt.setVisibility(View.VISIBLE);
+        else
+            mEmptyTxt.setVisibility(View.GONE);
 
         return root;
     }
@@ -45,6 +52,7 @@ public class FavouritesFragment extends BaseFragment implements GridView.OnItemC
     private void initUI(View root)
     {
         mGridView   = (GridView) root.findViewById(R.id.grid_view);
+        mEmptyTxt   = (TextView) root.findViewById(R.id.empty_txt);
         mCountries  = new ArrayList<>();
     }
 
@@ -63,5 +71,10 @@ public class FavouritesFragment extends BaseFragment implements GridView.OnItemC
         mContacts   = usersAndCountruesDatabaseComunication.selectUsersAndTheirCountries(mCountries,Utils.INVALID_ROW_INDEX,null,null,searchStirng,false);
         mGridAdapter.setContactsList(mContacts);
         mGridAdapter.notifyDataSetChanged();
+
+        if(mContacts.size() < 1)
+            mEmptyTxt.setVisibility(View.VISIBLE);
+        else
+            mEmptyTxt.setVisibility(View.GONE);
     }
 }

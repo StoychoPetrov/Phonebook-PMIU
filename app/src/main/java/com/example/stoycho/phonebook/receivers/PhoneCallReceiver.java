@@ -35,6 +35,7 @@ public class PhoneCallReceiver extends CallingReceiver {
 
     @Override
     protected void onIncomingCallAnswered(Context ctx, String number, Date start) {
+        saveInHistories(ctx,number,Utils.STATE_INCOMMING,start,false);
     }
 
     @Override
@@ -55,27 +56,13 @@ public class PhoneCallReceiver extends CallingReceiver {
         saveInHistories(ctx,number,Utils.STATE_MISSED,start,true);
     }
 
-    private String getCountryCode(Context context,String phone){
-
-        CountriesDatabaseCommunication countriesDatabaseCommunication = CountriesDatabaseCommunication.getInstance(context);
-        List<CountryModel>             countries                      = countriesDatabaseCommunication.selectAllCountriesFromDatabase(CountriesDatabaseCommunication.SELECT_ALL_COUNTRIES,null);
-
-        for(CountryModel countryModel : countries) {
-            if (countryModel.getCallingCode() != null && !countryModel.getCallingCode().equalsIgnoreCase("")) {
-                if (phone.contains("+" + countryModel.getCallingCode()))
-                    return countryModel.getCallingCode();
-            }
-        }
-        return null;
-    }
-
     private void saveInHistories(Context context, String number, int state, Date date, boolean missed){
         if(number != null && !number.equalsIgnoreCase("")) {
-            String      countryCode = getCountryCode(context, number);
+            String      countryCode = Utils.getCountryCode(context, number);
             UserModel   userModel = null;
             int callingCount = -1;
             if (countryCode != null)
-                userModel = UsersDatabaseCommunication.getInstance(context).getUserIdByPhone(number.substring(countryCode.length() + 1),callingCount);
+                userModel = UsersDatabaseCommunication.getInstance(context).getUserIdByPhone(number.substring(countryCode.length() + 1));
 
             if (userModel != null && userModel.getId() >= 0) {
                 HistoryModel historyModel = new HistoryModel(date.toString(), userModel.getId());

@@ -93,6 +93,25 @@ public class UsersAndCountruesDatabaseComunication extends Database {
             return null;
     }
 
+    public UserModel selectByPhoneNumber(String number, CountryModel countryModel){
+        String query = "SELECT * "
+                +  "FROM " + USERS_TABLE_NAME + " users " + "INNER JOIN " + COUNTRIES_TABLE_NAME + " countries "
+                +  "ON " + "users." + COLUMN_COUNTRY_ID_FK + " = countries." + COLUMN_COUNTRY_ID + " WHERE users." + COLUMN_PHONE_NUMBER + " = " + number;
+
+        List<UserModel>     users       = new ArrayList<>();
+        List<CountryModel>  countries   = new ArrayList<>();
+
+        select(query,countries,users);
+
+        if(countries.size() > 0 )
+            countryModel    = countries.get(0);
+
+        if(users.size() > 0)
+            return users.get(0);
+        else
+            return null;
+    }
+
     private void select(String query,List<CountryModel> countries, List<UserModel> users)
     {
         SQLiteDatabase database = getWritableDatabase();

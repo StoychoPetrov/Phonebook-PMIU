@@ -136,7 +136,7 @@
                         android:textSize        ="16sp"
                         android:paddingLeft     ="2dp"
                         android:paddingRight    ="2dp"
-                        android:visibility      ="visible"/>
+                        android:visibility      ="gone"/>
 
                     <EditText
                         android:id              ="@+id/country"
