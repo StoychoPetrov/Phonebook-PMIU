@@ -7,6 +7,5 @@ import android.view.View;
  */
 
 public interface OnClickViewInItem {
-
     void onClickView(View view, int position);
 }

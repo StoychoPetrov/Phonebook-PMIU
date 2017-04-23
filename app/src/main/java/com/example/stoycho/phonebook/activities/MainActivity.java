@@ -1,22 +1,18 @@
 package com.example.stoycho.phonebook.activities;
 
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.telecom.Call;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioGroup;
@@ -49,14 +45,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private ImageButton         mSearchButton;
     private ImageButton         mCloseButton;
     private TextView            mTitleTxt;
-
     private EditText            mSearchCountryEdb;
-    private RadioGroup          mGenderRadioGroup;
 
     private CountriesDatabaseCommunication  mCountriesDatabaseComunications;
 
-    private int                 mFirstTouchPositionY;
-    private int                 mFilterCurrentTopMargin;
     private int                 mViewPagerPosition = 0;
 
     @Override
@@ -91,7 +83,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         mSearchButton       = (ImageButton)     findViewById(R.id.search_button);
         mCloseButton        = (ImageButton)     findViewById(R.id.close_button);
         mSearchCountryEdb   = (EditText)        findViewById(R.id.search);
-        mGenderRadioGroup   = (RadioGroup)      findViewById(R.id.gender_radio);
 
         mCountriesDatabaseComunications =   CountriesDatabaseCommunication.getInstance(this);
     }
